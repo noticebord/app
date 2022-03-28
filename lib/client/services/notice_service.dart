@@ -28,8 +28,8 @@ class NoticeService extends Service {
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
-      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return parsed.map<Notice>((item) => Notice.fromJSON(item)).toList();
+      final parsed = jsonDecode(response.body)['data'].cast<Map<String, dynamic>>();
+      return parsed.map<ListNotice>((item) => ListNotice.fromJSON(item)).toList();
     } else {
       throw Exception(
           "Failed to fetch notices - ${response.statusCode}: ${response.reasonPhrase}");

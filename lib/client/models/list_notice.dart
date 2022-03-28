@@ -7,7 +7,7 @@ class ListNotice {
   String createdAt;
   String updatedAt;
   List<Topic> topics;
-  User author;
+  User? author;
 
   ListNotice(this.id, this.title, this.createdAt, this.updatedAt, this.topics,
       this.author);
@@ -18,8 +18,8 @@ class ListNotice {
       parsedJson['title'],
       parsedJson['created_at'],
       parsedJson['updated_at'],
-      parsedJson["topics"].map((t) => Topic.fromJSON(t)),
-      User.fromJSON(parsedJson['updated_at']),
+      parsedJson["topics"].map<Topic>((t) => Topic.fromJSON(t)).toList(),
+      parsedJson['author'] == null ? null : User.fromJSON(parsedJson['author']),
     );
   }
 }
