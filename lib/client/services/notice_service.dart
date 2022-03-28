@@ -1,5 +1,75 @@
+import 'dart:convert';
+
+import 'package:app/client/models/notice.dart';
+import 'package:app/client/requests/save_notice_request.dart';
+import 'package:http/http.dart' as http;
+
 import 'service.dart';
 
 class NoticeService extends Service {
-  NoticeService(String token, String baseUrl): super(token, baseUrl);
+  NoticeService(String token, String baseUrl) : super(token, baseUrl);
+
+  Future<Notice> createNotice(SaveNoticeRequest request) async {
+    final response = await http.post(Uri.parse("$baseUrl/notices"),
+        headers: Service.defaultHeaders, body: request);
+
+    if (response.statusCode == 200) {
+      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
+      return Notice.fromJSON(parsed);
+    } else {
+      throw Exception(
+          "Failed to create notice - ${response.statusCode}: ${response.reasonPhrase}");
+    }
+  }
+
+  Future<List<Notice>> getNotices() async {
+    final response = await http.get(Uri.parse("$baseUrl/notices"),
+        headers: Service.defaultHeaders);
+
+    if (response.statusCode == 200) {
+      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
+      return parsed.map<Notice>((item) => Notice.fromJSON(item)).toList();
+    } else {
+      throw Exception(
+          "Failed to fetch notices - ${response.statusCode}: ${response.reasonPhrase}");
+    }
+  }
+
+  Future<Notice> getNotice(int id) async {
+    final response = await http.get(Uri.parse("$baseUrl/notices/$id"),
+        headers: Service.defaultHeaders);
+
+    if (response.statusCode == 200) {
+      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
+      return Notice.fromJSON(parsed);
+    } else {
+      throw Exception(
+          "Failed to fetch notice - ${response.statusCode}: ${response.reasonPhrase}");
+    }
+  }
+
+  Future<Notice> updateNotice(int id, SaveNoticeRequest request) async {
+    final response = await http.put(Uri.parse("$baseUrl/notices/$id"),
+        headers: Service.defaultHeaders, body: request);
+
+    if (response.statusCode == 200) {
+      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
+      return Notice.fromJSON(parsed);
+    } else {
+      throw Exception(
+          "Failed to create notice - ${response.statusCode}: ${response.reasonPhrase}");
+    }
+  }
+
+  Future deleteNotice(int id) async {
+    final response = await http.delete(Uri.parse("$baseUrl/notices/$id"),
+        headers: Service.defaultHeaders);
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception(
+          "Failed to create notice - ${response.statusCode}: ${response.reasonPhrase}");
+    }
+  }
 }
