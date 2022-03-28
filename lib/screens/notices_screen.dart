@@ -17,8 +17,7 @@ class _NoticesScreenState extends State<NoticesScreen> {
   void initState() {
     super.initState();
     var client = NoticebordClient("");
-    var noticeService = client.notices;
-    futureNotices = noticeService.getNotices();
+    futureNotices = client.notices.getNotices();
   }
 
   @override
@@ -91,7 +90,7 @@ class _NoticesScreenState extends State<NoticesScreen> {
         }
 
         // By default, show a loading spinner.
-        return const CircularProgressIndicator();
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }
