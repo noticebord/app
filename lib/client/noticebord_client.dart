@@ -1,3 +1,5 @@
+import 'package:app/client/requests/authenticate_request.dart';
+
 import 'services/notice_service.dart';
 import 'services/team_notice_service.dart';
 import 'services/team_service.dart';
@@ -15,11 +17,9 @@ class NoticebordClient {
 
   static Future<String> getToken(
     String baseUrl,
-    String email,
-    String password,
-    String deviceName,
+    AuthenticateRequest request,
   ) async =>
-      await TokenService.getToken(baseUrl, email, password, deviceName);
+      await TokenService.getToken(baseUrl, request);
 
   NoticeService get notices => NoticeService(token, baseUrl);
   TeamService get teams => TeamService(token, baseUrl);

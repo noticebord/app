@@ -1,9 +1,30 @@
+import 'dart:convert';
+
+import 'package:app/client/requests/authenticate_request.dart';
+import 'package:app/client/services/service.dart';
+
+import 'package:http/http.dart' as http;
+
 class TokenService {
   static Future<String> getToken(
     String baseUrl,
-    String email,
-    String password,
-    String deviceName,
-  ) async =>
-      await Future.delayed(const Duration(seconds: 1), () => "S3CR3TT0K3N");
+    AuthenticateRequest request,
+  ) async {
+    final response = await http.post(
+      Uri.parse("$baseUrl/tokens"),
+      headers: Service.defaultHeaders,
+      body: jsonEncode(<String, String>{
+        'email': request.email,
+        'password': request.password,
+        'device_name': request.deviceName
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception(
+          "Failed to create token - ${response.statusCode}: ${response.reasonPhrase}");
+    }
+  }
 }
