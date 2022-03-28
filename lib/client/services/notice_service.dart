@@ -35,8 +35,8 @@ class NoticeService extends Service {
     }
   }
 
-  Future<Notice> getNotice(int id) async {
-    final response = await http.get(Uri.parse("$baseUrl/notices/$id"),
+  Future<Notice> getNotice(int noticeId) async {
+    final response = await http.get(Uri.parse("$baseUrl/notices/$noticeId"),
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
@@ -48,8 +48,8 @@ class NoticeService extends Service {
     }
   }
 
-  Future<Notice> updateNotice(int id, SaveNoticeRequest request) async {
-    final response = await http.put(Uri.parse("$baseUrl/notices/$id"),
+  Future<Notice> updateNotice(int noticeId, SaveNoticeRequest request) async {
+    final response = await http.put(Uri.parse("$baseUrl/notices/$noticeId"),
         headers: Service.defaultHeaders, body: request);
 
     if (response.statusCode == 200) {
@@ -57,19 +57,19 @@ class NoticeService extends Service {
       return Notice.fromJSON(parsed);
     } else {
       throw Exception(
-          "Failed to create notice - ${response.statusCode}: ${response.reasonPhrase}");
+          "Failed to update notice - ${response.statusCode}: ${response.reasonPhrase}");
     }
   }
 
-  Future deleteNotice(int id) async {
-    final response = await http.delete(Uri.parse("$baseUrl/notices/$id"),
+  Future deleteNotice(int noticeId) async {
+    final response = await http.delete(Uri.parse("$baseUrl/notices/$noticeId"),
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
       return;
     } else {
       throw Exception(
-          "Failed to create notice - ${response.statusCode}: ${response.reasonPhrase}");
+          "Failed to delete notice - ${response.statusCode}: ${response.reasonPhrase}");
     }
   }
 }
