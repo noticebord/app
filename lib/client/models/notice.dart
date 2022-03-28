@@ -1,0 +1,27 @@
+import 'package:app/client/models/topic.dart';
+import 'package:app/client/models/user.dart';
+
+class Notice {
+  int id;
+  String title;
+  String body;
+  String createdAt;
+  String updatedAt;
+  List<Topic> topics;
+  User author;
+
+  Notice(this.id, this.title, this.body, this.createdAt, this.updatedAt, this.topics,
+      this.author);
+
+  factory Notice.fromJSON(Map<String, dynamic> parsedJson) {
+    return Notice(
+      parsedJson['id'],
+      parsedJson['title'],
+      parsedJson['body'],
+      parsedJson['created_at'],
+      parsedJson['updated_at'],
+      parsedJson["topics"].map((t) => Topic.fromJSON(t)),
+      User.fromJSON(parsedJson['updated_at']),
+    );
+  }
+}
