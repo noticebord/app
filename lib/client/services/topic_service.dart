@@ -16,7 +16,7 @@ class TopicService extends Service{
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return parsed.map<Topic>((item) => Topic.fromJSON(item)).toList();
+      return parsed.map<Topic>(Topic.fromJSON).toList();
     } else {
       throw Exception(
           "Failed to fetch topics - ${response.statusCode}: ${response.reasonPhrase}");

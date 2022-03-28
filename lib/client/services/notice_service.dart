@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:app/client/models/list_notice.dart';
 import 'package:app/client/models/notice.dart';
+import 'package:app/client/models/paginated.dart';
 import 'package:app/client/requests/save_notice_request.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,13 +24,13 @@ class NoticeService extends Service {
     }
   }
 
-  Future<List<ListNotice>> getNotices() async {
-    final response = await http.get(Uri.parse("$baseUrl/notices"),
+  Future<Paginated<List<ListNotice>>> getNotices({String? cursor}) async {
+    final response = await http.get(Uri.parse("$baseUrl/notices?cursor=$cursor"),
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
-      final parsed = jsonDecode(response.body)['data'].cast<Map<String, dynamic>>();
-      return parsed.map<ListNotice>((item) => ListNotice.fromJSON(item)).toList();
+      final parsed = jsonDecode(response.body);
+      return Paginated<List<ListNotice>>.fromJSON(parsed);
     } else {
       throw Exception(
           "Failed to fetch notices - ${response.statusCode}: ${response.reasonPhrase}");
