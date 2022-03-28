@@ -1,23 +1,24 @@
+import 'package:app/client/models/topic.dart';
 import 'package:app/client/models/user.dart';
 
-class TeamNotice {
+class ListNotice {
   int id;
   String title;
-  String body;
   String createdAt;
   String updatedAt;
+  List<Topic> topics;
   User author;
 
-  TeamNotice(this.id, this.title, this.body, this.createdAt, this.updatedAt,
+  ListNotice(this.id, this.title, this.createdAt, this.updatedAt, this.topics,
       this.author);
 
-  factory TeamNotice.fromJSON(Map<String, dynamic> parsedJson) {
-    return TeamNotice(
+  factory ListNotice.fromJSON(Map<String, dynamic> parsedJson) {
+    return ListNotice(
       parsedJson['id'],
       parsedJson['title'],
-      parsedJson['body'],
       parsedJson['created_at'],
       parsedJson['updated_at'],
+      parsedJson["topics"].map((t) => Topic.fromJSON(t)),
       User.fromJSON(parsedJson['updated_at']),
     );
   }

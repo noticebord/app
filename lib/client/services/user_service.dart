@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app/client/models/list_notice.dart';
 import 'package:app/client/models/notice.dart';
 import 'package:app/client/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +36,7 @@ class UserService extends Service{
     }
   }
 
-  Future<List<Notice>> getUserNotices(int userId) async {
+  Future<List<ListNotice>> getUserNotices(int userId) async {
     final response = await http.get(Uri.parse("$baseUrl/users/$userId/notices"),
         headers: Service.defaultHeaders);
 
@@ -48,7 +49,7 @@ class UserService extends Service{
     }
   }
 
-  Future<List<Notice>> getUserNotes(int userId) async {
+  Future<List<ListNotice>> getUserNotes(int userId) async {
     final response = await http.get(Uri.parse("$baseUrl/users/$userId/notes"),
         headers: Service.defaultHeaders);
 

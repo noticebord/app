@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app/client/models/list_notice.dart';
 import 'package:app/client/models/notice.dart';
 import 'package:app/client/models/topic.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +36,7 @@ class TopicService extends Service{
     }
   }
 
-  Future<List<Notice>> getTopicNotices(int topicId) async {
+  Future<List<ListNotice>> getTopicNotices(int topicId) async {
     final response = await http.get(Uri.parse("$baseUrl/topics/$topicId/notices"),
         headers: Service.defaultHeaders);
 

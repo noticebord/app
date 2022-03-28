@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app/client/models/list_team_notice.dart';
 import 'package:app/client/models/team_notice.dart';
 import 'package:app/client/requests/save_team_notice_request.dart';
 import 'package:http/http.dart' as http;
@@ -25,7 +26,7 @@ class TeamNoticeService extends Service {
     }
   }
 
-  Future<List<TeamNotice>> getTeamNotices(int teamId) async {
+  Future<List<ListTeamNotice>> getTeamNotices(int teamId) async {
     final response = await http.get(Uri.parse("$baseUrl/teams/$teamId/notices"),
         headers: Service.defaultHeaders);
 
