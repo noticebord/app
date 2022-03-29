@@ -15,10 +15,8 @@ class NoticebordClient {
 
   NoticebordClient(this.token, {this.baseUrl = defaultBaseUrl});
 
-  static Future<String> getToken(
-    String baseUrl,
-    AuthenticateRequest request,
-  ) async =>
+  static Future<String> getToken(AuthenticateRequest request,
+          {String baseUrl = defaultBaseUrl}) async =>
       await TokenService.getToken(baseUrl, request);
 
   NoticeService get notices => NoticeService(token, baseUrl);

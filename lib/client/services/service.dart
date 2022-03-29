@@ -4,6 +4,7 @@ abstract class Service {
 
   static Map<String, String> defaultHeaders = {
     "Accept": "application/json",
+    "Content-Type": "application/json",
     "User-Agent": "app",
   };
 

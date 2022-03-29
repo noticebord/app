@@ -1,5 +1,8 @@
+import 'package:app/client/noticebord_client.dart';
+import 'package:app/client/requests/authenticate_request.dart';
 import 'package:app/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -9,7 +12,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
@@ -17,9 +20,19 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: ListView(
-          children: <Widget>[
-            Container(
+        child: Center(
+          child: ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(16),
+                  child: const Icon(
+                    Icons.account_circle,
+                    size: 100,
+                    color: Colors.blue,
+                  )),
+              Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(16),
                 child: const Text(
@@ -28,65 +41,104 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.blue,
                       fontWeight: FontWeight.w500,
                       fontSize: 30),
-                )),
-            Container(
+                ),
+              ),
+              Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(16),
                 child: const Text(
                   'Sign in',
                   style: TextStyle(fontSize: 16),
-                )),
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'User Name',
                 ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: TextField(
-                obscureText: true,
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Email Address',
+                  ),
                 ),
               ),
-            ),
-            Container(
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ElevatedButton(
-                child: const Text('Log In'),
-                onPressed: () {
-                  print(nameController.text);
-                  print(passwordController.text);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage(title: "Noticebord", authenticated: true,)),
-                  );
-                },
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage(title: "Noticebord", authenticated: false,)),
-                  );
-                },
-                child: const Text(
-                  'Skip for Now',
+              Container(
+                padding: const EdgeInsets.all(16),
+                child: TextField(
+                  obscureText: true,
+                  controller: passwordController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                  ),
                 ),
               ),
-            ),
-          ],
+              Container(
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ElevatedButton(
+                  child: const Text('Log In'),
+                  onPressed: () async {
+                    final email = emailController.text;
+                    final password = passwordController.text;
+
+                    if (email == "") {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Email address cannot be empty"),
+                      ));
+                      return;
+                    }
+
+                    if (password == "") {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Password cannot be empty"),
+                      ));
+                      return;
+                    }
+
+                    try {
+                      final request =
+                          AuthenticateRequest(email, password, "App");
+                      final token = await NoticebordClient.getToken(request);
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setString("token", token);
+                    } on Exception catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(e.toString()),
+                      ));
+                      return;
+                    }
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(
+                          title: "Noticebord",
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(
+                          title: "Noticebord",
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Skip for Now',
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
