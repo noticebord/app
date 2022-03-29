@@ -1,7 +1,8 @@
+import 'package:app/application_model.dart';
 import 'package:app/client/models/topic.dart';
-import 'package:app/client/noticebord_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class TopicsScreen extends StatefulWidget {
   const TopicsScreen({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class _TopicsScreenState extends State<TopicsScreen> {
   @override
   void initState() {
     super.initState();
-    var client = NoticebordClient("");
+    var client = Provider.of<ApplicationModel>(context, listen: false).client;
     futureTopics = client.topics.getTopics();
   }
 

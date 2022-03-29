@@ -1,7 +1,9 @@
+import 'package:app/application_model.dart';
 import 'package:app/client/noticebord_client.dart';
 import 'package:app/client/requests/authenticate_request.dart';
 import 'package:app/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -82,25 +84,31 @@ class _LoginPageState extends State<LoginPage> {
                     final password = passwordController.text;
 
                     if (email == "") {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Email address cannot be empty"),
-                      ));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Email address cannot be empty"),
+                        ),
+                      );
                       return;
                     }
-
                     if (password == "") {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Password cannot be empty"),
-                      ));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Password cannot be empty"),
+                        ),
+                      );
                       return;
                     }
 
                     try {
+                      final app =
+                          Provider.of<ApplicationModel>(context, listen: false);
                       final request =
                           AuthenticateRequest(email, password, "App");
                       final token = await NoticebordClient.getToken(request);
                       final prefs = await SharedPreferences.getInstance();
                       await prefs.setString("token", token);
+                      app.setToken(token);
                     } on Exception catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(e.toString()),

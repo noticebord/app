@@ -1,8 +1,10 @@
+import 'package:app/application_model.dart';
 import 'package:app/client/models/list_notice.dart';
 import 'package:app/client/models/paginated.dart';
 import 'package:app/client/noticebord_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class NoticesScreen extends StatefulWidget {
   const NoticesScreen({Key? key}) : super(key: key);
@@ -19,7 +21,7 @@ class _NoticesScreenState extends State<NoticesScreen> {
   @override
   void initState() {
     super.initState();
-    client = NoticebordClient("");
+    client = Provider.of<ApplicationModel>(context, listen: false).client;
     futureNotices = client.notices.getNotices();
   }
 

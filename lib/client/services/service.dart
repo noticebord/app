@@ -1,5 +1,5 @@
 abstract class Service {
-  String token;
+  String? token;
   String baseUrl;
 
   static Map<String, String> defaultHeaders = {

@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'service.dart';
 
 class TeamNoticeService extends Service {
-  TeamNoticeService(String token, String baseUrl) : super(token, baseUrl);
+  TeamNoticeService(String? token, String baseUrl) : super(token, baseUrl);
 
   Future<TeamNotice> createTeamNotice(
       int teamId, SaveTeamNoticeRequest request) async {

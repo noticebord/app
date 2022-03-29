@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'service.dart';
 
 class UserService extends Service{
-  UserService(String token, String baseUrl): super(token, baseUrl);
+  UserService(String? token, String baseUrl): super(token, baseUrl);
 
   Future<List<User>> getUsers() async {
     final response = await http.get(Uri.parse("$baseUrl/users"),

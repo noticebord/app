@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'service.dart';
 
 class NoticeService extends Service {
-  NoticeService(String token, String baseUrl) : super(token, baseUrl);
+  NoticeService(String? token, String baseUrl) : super(token, baseUrl);
 
   Future<Notice> createNotice(SaveNoticeRequest request) async {
     final response = await http.post(Uri.parse("$baseUrl/notices"),

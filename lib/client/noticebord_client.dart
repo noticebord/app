@@ -10,10 +10,10 @@ import 'services/user_service.dart';
 class NoticebordClient {
   static const String defaultBaseUrl = "https://noticebord.herokuapp.com/api";
 
-  String token;
+  String? token;
   String baseUrl;
 
-  NoticebordClient(this.token, {this.baseUrl = defaultBaseUrl});
+  NoticebordClient({this.token, this.baseUrl = defaultBaseUrl});
 
   static Future<String> getToken(AuthenticateRequest request,
           {String baseUrl = defaultBaseUrl}) async =>

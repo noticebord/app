@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'service.dart';
 
 class TeamService extends Service{
-  TeamService(String token, String baseUrl): super(token, baseUrl);
+  TeamService(String? token, String baseUrl): super(token, baseUrl);
 
   Future<List<Team>> getTeams() async {
     final response = await http.get(Uri.parse("$baseUrl/teams"),

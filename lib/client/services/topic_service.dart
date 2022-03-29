@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'service.dart';
 
 class TopicService extends Service{
-  TopicService(String token, String baseUrl): super(token, baseUrl);
+  TopicService(String? token, String baseUrl): super(token, baseUrl);
 
   Future<List<Topic>> getTopics() async {
     final response = await http.get(Uri.parse("$baseUrl/topics"),
