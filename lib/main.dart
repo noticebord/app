@@ -31,6 +31,7 @@ class NoticebordApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Noticebord',
         theme: ThemeData(primarySwatch: Colors.blue),
+        debugShowCheckedModeBanner: false, //For development purposes
         home: FutureBuilder<String?>(
             future: loadToken(),
             builder: (context, snapshot) {

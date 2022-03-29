@@ -1,4 +1,5 @@
 import 'package:app/application_model.dart';
+import 'package:app/pages/login_page.dart';
 import 'package:app/screens/home_screen.dart';
 import 'package:app/screens/notices_screen.dart';
 import 'package:app/screens/profile_screen.dart';
@@ -19,8 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  late bool authenticated;
-  late List<Widget> _pages;
+  // late bool authenticated;
 
   void _onTap(int index) {
     setState(() {
@@ -35,52 +35,80 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     final app = Provider.of<ApplicationModel>(context, listen: false).client;
-    final token = app.token;
-    authenticated = token != null;
-    _selectedIndex = authenticated ? 2 : 1;
-    _pages = [
-      if (authenticated) const TeamNoticesScreen(),
-      const NoticesScreen(),
-      const HomeScreen(),
-      const TopicsScreen(),
-      if (authenticated) const ProfileScreen(),
-    ];
+    _selectedIndex = app.token == null ? 1 : 2;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
-      body: Center(
-        child: IndexedStack(index: _selectedIndex, children: _pages),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: _onTap,
-        currentIndex: _selectedIndex,
-        selectedItemColor: ThemeData.light().primaryColor,
-        unselectedItemColor: Colors.grey,
-        items: <BottomNavigationBarItem>[
-          if (authenticated)
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.group), label: "Team Notices"),
-          const BottomNavigationBarItem(
-              icon: Icon(Icons.sticky_note_2), label: "Notices"),
-          const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          const BottomNavigationBarItem(icon: Icon(Icons.tag), label: "Topics"),
-          if (authenticated)
-            const BottomNavigationBarItem(
-                icon: Icon(Icons.account_circle), label: "Profile"),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addNotice,
-        tooltip: 'Add a Notice',
-        child: const Icon(Icons.add),
-      ),
+    return Consumer<ApplicationModel>(
+      builder: (context, app, child) {
+        final authenticated = app.token != null;
+        if (!authenticated && _selectedIndex > 2) {
+            _selectedIndex = 1;
+        }
+        return Scaffold(
+          appBar: AppBar(title: Text(widget.title), actions: [
+            authenticated
+                ? IconButton(
+                    icon: const Icon(Icons.logout),
+                    tooltip: "Log out",
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.remove("token");
+                      app.setToken(null);
+                    },
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.login),
+                    tooltip: "Log in",
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginPage()),
+                      );
+                    },
+                  )
+          ]),
+          body: Center(
+            child: IndexedStack(index: _selectedIndex, children: [
+              if (authenticated) const TeamNoticesScreen(),
+              const NoticesScreen(),
+              const HomeScreen(),
+              const TopicsScreen(),
+              if (authenticated) const ProfileScreen(),
+            ]),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            onTap: _onTap,
+            currentIndex: _selectedIndex,
+            selectedItemColor: ThemeData.light().primaryColor,
+            unselectedItemColor: Colors.grey,
+            items: <BottomNavigationBarItem>[
+              if (authenticated)
+                const BottomNavigationBarItem(
+                    icon: Icon(Icons.group), label: "Team Notices"),
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.sticky_note_2), label: "Notices"),
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.home), label: "Home"),
+              const BottomNavigationBarItem(
+                  icon: Icon(Icons.tag), label: "Topics"),
+              if (authenticated)
+                const BottomNavigationBarItem(
+                    icon: Icon(Icons.account_circle), label: "Profile"),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: _addNotice,
+            tooltip: 'Add a Notice',
+            child: const Icon(Icons.add),
+          ),
+        );
+      },
     );
   }
 }
