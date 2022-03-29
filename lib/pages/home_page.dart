@@ -6,25 +6,24 @@ import 'package:app/screens/topics_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required this.title}) : super(key: key);
+  const HomePage({Key? key, required this.title, required this.authenticated}) : super(key: key);
 
   final String title;
+  final bool authenticated;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState(authenticated: authenticated);
 }
 
 class _HomePageState extends State<HomePage> {
-  static const bool _isAuthenticated = false;
-  int _selectedIndex = _isAuthenticated ? 2 : 1;
+  int _selectedIndex = 0;
+  bool authenticated;
 
-  final _pages = <Widget>[
-    if (_isAuthenticated) const TeamNoticesScreen(),
-    const NoticesScreen(),
-    const HomeScreen(),
-    const TopicsScreen(),
-    if (_isAuthenticated) const ProfileScreen(),
-  ];
+  _HomePageState({required this.authenticated}) {
+    _selectedIndex = authenticated ? 2 : 1;
+  }
+
+  final _pages = <Widget>[];
 
   void _onTap(int index)
   {
@@ -37,6 +36,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    _pages.addAll([
+      if (authenticated) const TeamNoticesScreen(),
+      const NoticesScreen(),
+      const HomeScreen(),
+      const TopicsScreen(),
+      if (authenticated) const ProfileScreen(),
+    ]);
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: Center(
@@ -47,12 +54,12 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _selectedIndex,
         selectedItemColor: ThemeData.light().primaryColor,
         unselectedItemColor: Colors.grey,
-        items: const <BottomNavigationBarItem>[
-          if (_isAuthenticated) BottomNavigationBarItem(icon: Icon(Icons.group), label: "Team Notices"),
-          BottomNavigationBarItem(icon: Icon(Icons.sticky_note_2), label: "Notices"),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.tag), label: "Topics"),
-          if (_isAuthenticated) BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: "Profile"),
+        items: <BottomNavigationBarItem>[
+          if (authenticated) const BottomNavigationBarItem(icon: const Icon(Icons.group), label: "Team Notices"),
+          const BottomNavigationBarItem(icon: const Icon(Icons.sticky_note_2), label: "Notices"),
+          const BottomNavigationBarItem(icon: const Icon(Icons.home), label: "Home"),
+          const BottomNavigationBarItem(icon: const Icon(Icons.tag), label: "Topics"),
+          if (authenticated) const BottomNavigationBarItem(icon: const Icon(Icons.account_circle), label: "Profile"),
         ],
       ),
       floatingActionButton: FloatingActionButton(

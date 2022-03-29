@@ -1,4 +1,4 @@
-import 'package:app/pages/home_page.dart';
+import 'package:app/pages/login_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +16,7 @@ class NoticebordApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(title: 'Noticebord'),
+      home: const LoginPage(),
     );
   }
 }
