@@ -19,26 +19,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-  // late bool authenticated;
-
   void _onTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    Provider.of<ApplicationModel>(context, listen: false).setPage(index);
   }
 
   void _addNotice() {}
-  Future<String?> loadToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
-  }
 
   @override
   void initState() {
     super.initState();
-    final app = Provider.of<ApplicationModel>(context, listen: false).client;
-    _selectedIndex = app.token == null ? 1 : 2;
+    final app = Provider.of<ApplicationModel>(context, listen: false);
+    app.setPage(app.token == null ? 1 : 2);
   }
 
   @override
@@ -46,11 +37,9 @@ class _HomePageState extends State<HomePage> {
     return Consumer<ApplicationModel>(
       builder: (context, app, child) {
         final authenticated = app.token != null;
-        if (!authenticated && _selectedIndex > 2) {
-            _selectedIndex = 1;
-        }
         return Scaffold(
           appBar: AppBar(title: Text(widget.title), actions: [
+            IconButton(onPressed: () {}, icon: const Icon(Icons.dark_mode)),
             authenticated
                 ? IconButton(
                     icon: const Icon(Icons.logout),
@@ -59,6 +48,7 @@ class _HomePageState extends State<HomePage> {
                       final prefs = await SharedPreferences.getInstance();
                       await prefs.remove("token");
                       app.setToken(null);
+                      app.setPage(1);
                     },
                   )
                 : IconButton(
@@ -74,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                   )
           ]),
           body: Center(
-            child: IndexedStack(index: _selectedIndex, children: [
+            child: IndexedStack(index: app.page, children: [
               if (authenticated) const TeamNoticesScreen(),
               const NoticesScreen(),
               const HomeScreen(),
@@ -84,7 +74,7 @@ class _HomePageState extends State<HomePage> {
           ),
           bottomNavigationBar: BottomNavigationBar(
             onTap: _onTap,
-            currentIndex: _selectedIndex,
+            currentIndex: app.page,
             selectedItemColor: ThemeData.light().primaryColor,
             unselectedItemColor: Colors.grey,
             items: <BottomNavigationBarItem>[
