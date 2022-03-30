@@ -28,10 +28,10 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
     futureScreen = loadTeamsAndNotices();
   }
 
-  Future loadTeamsAndNotices() async {
+  Future loadTeamsAndNotices([int? id]) async {
     client = Provider.of<ApplicationModel>(context, listen: false).client;
     teams = await client.teams.getTeams();
-    _currentTeam = teams[0];
+    _currentTeam = id == null ? teams[0] : teams.singleWhere((element) => element.id == id);
     teamNotices = await client.teamNotices.getTeamNotices(_currentTeam.id);
   }
 
@@ -113,6 +113,7 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                                                 onTap: () {
                                                   setState(() {
                                                     _currentTeam = team;
+                                                    futureScreen = loadTeamsAndNotices(team.id);
                                                   });
                                                   Navigator.pop(context);
                                                 },
@@ -134,49 +135,54 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                   ],
                 ),
               ),
+              Expanded(
+                child: !done
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: teamNotices.data.length,
+                        itemBuilder: (context, position) {
+                          final notice = teamNotices.data[position];
+                          return Card(
+                            child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 16.0),
+                                      child: Text(notice.title,
+                                        textAlign: TextAlign.start,
+                                        style: const TextStyle(fontSize: 24.0),
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundColor: Colors.grey.shade800,
+                                          child: Text(notice.author.name[0]),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                            notice.author.name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge,
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                )),
+                          );
+                        },
+                      ),
+              ),
             ],
           );
         });
-
-    // Expanded(
-    //   child: ListView.builder(
-    //     scrollDirection: Axis.vertical,
-    //     itemCount: 20,
-    //     itemBuilder: (context, position) {
-    //       return Card(
-    //         child: Padding(
-    //             padding: const EdgeInsets.all(16.0),
-    //             child: Column(
-    //               crossAxisAlignment: CrossAxisAlignment.start,
-    //               children: [
-    //                 Padding(
-    //                   padding: const EdgeInsets.only(bottom: 16.0),
-    //                   child: Text(
-    //                     "Notice " + (position + 1).toString(),
-    //                     textAlign: TextAlign.start,
-    //                     style: const TextStyle(fontSize: 24.0),
-    //                   ),
-    //                 ),
-    //                 Row(
-    //                   children: [
-    //                     CircleAvatar(
-    //                       backgroundColor: Colors.grey.shade800,
-    //                       child: const Text('US'),
-    //                     ),
-    //                     Padding(
-    //                       padding: const EdgeInsets.only(left: 8.0),
-    //                       child: Text(
-    //                         "User",
-    //                         style: Theme.of(context).textTheme.titleLarge,
-    //                       ),
-    //                     )
-    //                   ],
-    //                 )
-    //               ],
-    //             )),
-    //       );
-    //     },
-    //   ),
-    // ),
   }
 }
