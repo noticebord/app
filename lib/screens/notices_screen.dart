@@ -1,6 +1,6 @@
 import 'package:app/application_model.dart';
 import 'package:app/client/models/list_notice.dart';
-import 'package:app/client/models/paginated.dart';
+import 'package:app/client/models/paginated_list.dart';
 import 'package:app/client/noticebord_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -15,7 +15,7 @@ class NoticesScreen extends StatefulWidget {
 
 class _NoticesScreenState extends State<NoticesScreen> {
   bool loading = false;
-  late Future<Paginated<List<ListNotice>>> futureNotices;
+  late Future<PaginatedList<ListNotice>> futureNotices;
   late NoticebordClient client;
 
   @override
@@ -27,7 +27,7 @@ class _NoticesScreenState extends State<NoticesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Paginated<List<ListNotice>>>(
+    return FutureBuilder<PaginatedList<ListNotice>>(
       future: futureNotices,
       builder: (context, snapshot) {
         if (snapshot.hasData) {

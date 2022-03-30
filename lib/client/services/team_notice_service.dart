@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app/client/models/list_team_notice.dart';
+import 'package:app/client/models/paginated_list.dart';
 import 'package:app/client/models/team_notice.dart';
 import 'package:app/client/requests/save_team_notice_request.dart';
 import 'package:http/http.dart' as http;
@@ -26,15 +27,13 @@ class TeamNoticeService extends Service {
     }
   }
 
-  Future<List<ListTeamNotice>> getTeamNotices(int teamId) async {
+  Future<PaginatedList<ListTeamNotice>> getTeamNotices(int teamId) async {
     final response = await http.get(Uri.parse("$baseUrl/teams/$teamId/notices"),
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
-      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return parsed
-          .map<TeamNotice>((item) => TeamNotice.fromJSON(item))
-          .toList();
+      final parsed = jsonDecode(response.body);
+      return PaginatedList<ListTeamNotice>.fromJSON(parsed);
     } else {
       throw Exception(
           "Failed to fetch team notices - ${response.statusCode}: ${response.reasonPhrase}");

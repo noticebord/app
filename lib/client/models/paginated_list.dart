@@ -1,13 +1,14 @@
 import 'package:app/client/models/list_notice.dart';
+import 'package:app/client/models/list_team_notice.dart';
 
-class Paginated<T> {
-  T data;
+class PaginatedList<T> {
+  List<T> data;
   String path;
   int perPage;
   String? nextPageUrl;
   String? prevPageUrl;
 
-  Paginated(
+  PaginatedList(
     this.data,
     this.path,
     this.perPage,
@@ -16,12 +17,13 @@ class Paginated<T> {
   );
 
   static const factories = <Type, Function>{
-    List<ListNotice>: ListNotice.fromJSON,
+    ListNotice: ListNotice.fromJSON,
+    ListTeamNotice: ListTeamNotice.fromJSON
   };
 
-  factory Paginated.fromJSON(Map<String, dynamic> parsedJson) {
-    return Paginated(
-      parsedJson["data"].map((i) => factories[T]!(i)).cast<ListNotice>().toList(),
+  factory PaginatedList.fromJSON(Map<String, dynamic> parsedJson) {
+    return PaginatedList(
+      parsedJson["data"].map((i) => factories[T]!(i)).cast<T>().toList(),
       parsedJson['path'],
       parsedJson['per_page'],
       parsedJson['next_page_url'],

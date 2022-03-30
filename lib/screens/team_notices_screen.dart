@@ -1,3 +1,5 @@
+import 'package:app/client/models/list_team_notice.dart';
+import 'package:app/client/models/paginated_list.dart';
 import 'package:app/client/models/team.dart';
 import 'package:app/client/noticebord_client.dart';
 import 'package:flutter/material.dart';
@@ -15,25 +17,31 @@ class TeamNoticesScreen extends StatefulWidget {
 
 class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
   late Team _currentTeam;
-  bool loading = false;
-  late Future<List<Team>> futureTeams;
+  late List<Team> teams;
+  late PaginatedList<ListTeamNotice> teamNotices;
   late NoticebordClient client;
+  late Future futureScreen;
 
   @override
   void initState() {
     super.initState();
+    futureScreen = loadTeamsAndNotices();
+  }
+
+  Future loadTeamsAndNotices() async {
     client = Provider.of<ApplicationModel>(context, listen: false).client;
-    futureTeams = client.teams.getTeams();
-    futureTeams.then((value) {
-      _currentTeam = value[0];
-    });
+    teams = await client.teams.getTeams();
+    _currentTeam = teams[0];
+    teamNotices = await client.teamNotices.getTeamNotices(_currentTeam.id);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Team>>(
-        future: futureTeams,
+    return FutureBuilder(
+        future: futureScreen,
         builder: (context, snapshot) {
+          final done = snapshot.connectionState == ConnectionState.done &&
+              !snapshot.hasError;
           return Column(
             children: <Widget>[
               Padding(
@@ -41,9 +49,7 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                 child: Row(
                   children: [
                     const Spacer(),
-                    snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData &&
-                            snapshot.data!.isNotEmpty
+                    done
                         ? ActionChip(
                             avatar: CircleAvatar(
                               child: Text(_currentTeam.name[0]),
@@ -90,10 +96,9 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                                           child: ListView.builder(
                                             scrollDirection: Axis.vertical,
                                             shrinkWrap: true,
-                                            itemCount: snapshot.data!.length,
+                                            itemCount: teams.length,
                                             itemBuilder: (context, position) {
-                                              final team =
-                                                  snapshot.data![position];
+                                              final team = teams[position];
                                               return ListTile(
                                                 tileColor:
                                                     team.id == _currentTeam.id
