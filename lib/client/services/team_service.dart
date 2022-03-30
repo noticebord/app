@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 
 import 'service.dart';
 
-class TeamService extends Service{
-  TeamService(String? token, String baseUrl): super(token, baseUrl);
+class TeamService extends Service {
+  TeamService(String? token, String baseUrl) : super(token, baseUrl);
 
   Future<List<Team>> getTeams() async {
     final response = await http.get(Uri.parse("$baseUrl/teams"),
@@ -14,7 +14,7 @@ class TeamService extends Service{
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return parsed.map<Team>((item) => Team.fromJSON(item)).toList();
+      return parsed.map<Team>(Team.fromJSON).toList();
     } else {
       throw Exception(
           "Failed to fetch teams - ${response.statusCode}: ${response.reasonPhrase}");
