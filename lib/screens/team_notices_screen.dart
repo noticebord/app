@@ -21,6 +21,7 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
   late PaginatedList<ListTeamNotice> teamNotices;
   late NoticebordClient client;
   late Future futureScreen;
+  bool loading = false;
 
   @override
   void initState() {
@@ -140,43 +141,73 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                     ? const Center(child: CircularProgressIndicator())
                     : ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: teamNotices.data.length,
+                        itemCount: teamNotices.nextPageUrl == null ? teamNotices.data.length :  teamNotices.data.length + 1,
                         itemBuilder: (context, position) {
-                          final notice = teamNotices.data[position];
-                          return Card(
-                            child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 16.0),
-                                      child: Text(notice.title,
-                                        textAlign: TextAlign.start,
-                                        style: const TextStyle(fontSize: 24.0),
-                                      ),
-                                    ),
-                                    Row(
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundColor: Colors.grey.shade800,
-                                          child: Text(notice.author.name[0]),
+                          if (position < teamNotices.data.length) {
+                            final notice = teamNotices.data[position];
+                            return Card(
+                              child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                        const EdgeInsets.only(bottom: 16.0),
+                                        child: Text(notice.title,
+                                          textAlign: TextAlign.start,
+                                          style: const TextStyle(
+                                              fontSize: 24.0),
                                         ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
-                                          child: Text(
-                                            notice.author.name,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge,
+                                      ),
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundColor: Colors.grey
+                                                .shade800,
+                                            child: Text(notice.author.name[0]),
                                           ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                )),
+                                          Padding(
+                                            padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                            child: Text(
+                                              notice.author.name,
+                                              style: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .titleLarge,
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  )),
+                            );
+                          }
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            child: Center(
+                              child: loading ? const CircularProgressIndicator() : ElevatedButton(
+                                onPressed: () async {
+                                  setState(() {
+                                    loading = true;
+                                  });
+
+                                  final cursor = Uri.parse(teamNotices.nextPageUrl!).queryParameters['cursor'];
+                                  final notices = teamNotices.data;
+                                  final tNotices = await client.teamNotices.getTeamNotices(_currentTeam.id, cursor: cursor);
+
+                                  setState(() {
+                                    teamNotices = tNotices;
+                                    teamNotices.data = [...notices, ...teamNotices.data];
+                                    loading = false;
+                                  });
+                                },
+                                child: const Text("Load more"),
+                              ),
+                            ),
                           );
                         },
                       ),

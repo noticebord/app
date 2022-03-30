@@ -27,8 +27,8 @@ class TeamNoticeService extends Service {
     }
   }
 
-  Future<PaginatedList<ListTeamNotice>> getTeamNotices(int teamId) async {
-    final response = await http.get(Uri.parse("$baseUrl/teams/$teamId/notices"),
+  Future<PaginatedList<ListTeamNotice>> getTeamNotices(int teamId, {String? cursor}) async {
+    final response = await http.get(Uri.parse("$baseUrl/teams/$teamId/notices?cursor=$cursor"),
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
