@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:app/client/models/list_notice.dart';
-import 'package:app/client/models/notice.dart';
 import 'package:app/client/models/user.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,11 +27,24 @@ class UserService extends Service{
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
-      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return parsed.map<User>((item) => User.fromJSON(item)).toList();
+      final parsed = jsonDecode(response.body);
+      return User.fromJSON(parsed);
     } else {
       throw Exception(
           "Failed to fetch user - ${response.statusCode}: ${response.reasonPhrase}");
+    }
+  }
+
+  Future<User> getCurrentUser() async {
+    final response = await http.get(Uri.parse("$baseUrl/user"),
+        headers: Service.defaultHeaders);
+
+    if (response.statusCode == 200) {
+      final parsed = jsonDecode(response.body);
+      return User.fromJSON(parsed);
+    } else {
+      throw Exception(
+          "Failed to fetch current user - ${response.statusCode}: ${response.reasonPhrase}");
     }
   }
 
@@ -42,7 +54,7 @@ class UserService extends Service{
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return parsed.map<Notice>((item) => Notice.fromJSON(item)).toList();
+      return parsed.map<ListNotice>((item) => ListNotice.fromJSON(item)).toList();
     } else {
       throw Exception(
           "Failed to fetch user notices - ${response.statusCode}: ${response.reasonPhrase}");
@@ -55,7 +67,7 @@ class UserService extends Service{
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return parsed.map<Notice>((item) => Notice.fromJSON(item)).toList();
+      return parsed.map<ListNotice>((item) => ListNotice.fromJSON(item)).toList();
     } else {
       throw Exception(
           "Failed to fetch user notes - ${response.statusCode}: ${response.reasonPhrase}");

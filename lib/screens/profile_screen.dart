@@ -1,5 +1,11 @@
+import 'package:app/application_model.dart';
+import 'package:app/client/models/list_notice.dart';
+import 'package:app/client/models/nested_topic.dart';
+import 'package:app/client/models/user.dart';
+import 'package:app/client/utilities/notice_utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -10,140 +16,185 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen>
     with TickerProviderStateMixin {
+  late Future futureProfile;
+  late User user;
+  late List<ListNotice> userNotices;
+  late int topicsPostedIn;
+  late List<NestedTopic> frequentTopics;
+
+  @override
+  void initState() {
+    super.initState();
+    futureProfile = loadUserAndNotices();
+  }
+
+  Future loadUserAndNotices() async {
+    final client = Provider.of<ApplicationModel>(context, listen: false).client;
+    user = await client.users.getCurrentUser();
+    userNotices = await client.users.getUserNotices(user.id);
+
+    final countMap = NoticeUtilities.generateTopicCounts(userNotices);
+    topicsPostedIn = countMap.length;
+    frequentTopics = NoticeUtilities.determineMostFrequent(countMap);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-          left: 16.0, right: 16.0, bottom: 16.0, top: 48.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: Row(
+    return FutureBuilder(
+        future: futureProfile,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text(snapshot.error.toString()),);
+          }
+          return Padding(
+            padding: const EdgeInsets.only(
+                left: 16.0, right: 16.0, bottom: 16.0, top: 48.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Row(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: CircleAvatar(
-                          radius: 75,
-                          backgroundColor: Colors.lightBlue.shade50,
-                          child: const Text(
-                            'U',
-                            style: TextStyle(fontSize: 60),
-                          ),
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Text(
-                              "User",
-                              style: Theme.of(context).textTheme.headline5,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: IconButton(
-                                onPressed: () {},
-                                icon: const Icon(Icons.qr_code),
-                                color: Colors.blueAccent),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.share),
-                            color: Colors.blueAccent,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: Text(
-                          "Overview",
-                          style: Theme.of(context).textTheme.headline5,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: RichText(
-                          text: TextSpan(
-                            style: DefaultTextStyle.of(context).style,
-                            children: [
-                              TextSpan(
-                                text: "Joined On: ",
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                              const TextSpan(text: "3/25/2022"),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: RichText(
-                          text: TextSpan(
-                            style: DefaultTextStyle.of(context).style,
-                            children: [
-                              TextSpan(
-                                text: "Notices Posted: ",
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                              const TextSpan(text: "25"),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: RichText(
-                          text: TextSpan(
-                            style: DefaultTextStyle.of(context).style,
-                            children: [
-                              TextSpan(
-                                text: "Topics Posted In: ",
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                              const TextSpan(text: "9"),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: Text(
-                          "Most Used Topics: ",
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ),
-                      Wrap(
-                        spacing: 8.0, // gap between adjacent chips
-                        runSpacing: 8.0,
-                        children: List<Widget>.generate(
-                          7,
-                          (index) => ActionChip(
-                            label: Text('#tag${index + 1}'),
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("#tag${index + 1} clicked"),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16.0),
+                              child: CircleAvatar(
+                                radius: 75,
+                                backgroundColor: Colors.lightBlue.shade50,
+                                child: Text(
+                                  user.name[0],
+                                  style: const TextStyle(fontSize: 60),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: Text(
+                                    user.name,
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(Icons.qr_code),
+                                      color: Colors.blueAccent),
+                                ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.share),
+                                  color: Colors.blueAccent,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16.0),
+                              child: Text(
+                                "Overview",
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: RichText(
+                                text: TextSpan(
+                                  style: DefaultTextStyle.of(context).style,
+                                  children: [
+                                    TextSpan(
+                                      text: "Joined On: ",
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    TextSpan(text: user.createdAt),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: RichText(
+                                text: TextSpan(
+                                  style: DefaultTextStyle.of(context).style,
+                                  children: [
+                                    TextSpan(
+                                      text: "Notices Posted: ",
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    TextSpan(
+                                        text: userNotices.length.toString()),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 8.0),
+                              child: RichText(
+                                text: TextSpan(
+                                  style: DefaultTextStyle.of(context).style,
+                                  children: [
+                                    TextSpan(
+                                      text: "Topics Posted In: ",
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                    TextSpan(text: topicsPostedIn.toString()),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 16.0),
+                              child: Text(
+                                "Most Used Topics: ",
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
+                            ),
+                            Wrap(
+                              spacing: 8.0, // gap between adjacent chips
+                              runSpacing: 8.0,
+                              children: List<Widget>.generate(
+                                frequentTopics.length,
+                                (index) {
+                                  final topic = frequentTopics[index];
+                                  return ActionChip(
+                                    label: Text('#${topic.name}'),
+                                    onPressed: () {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                          content:
+                                              Text("#${topic.name} clicked"),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -151,9 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 }
