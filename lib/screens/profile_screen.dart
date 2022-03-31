@@ -19,8 +19,11 @@ class _ProfileScreenState extends State<ProfileScreen>
   late Future futureProfile;
   late User user;
   late List<ListNotice> userNotices;
+  late List<ListNotice> userNotes;
   late int topicsPostedIn;
   late List<NestedTopic> frequentTopics;
+
+  var _viewPrivate = false;
 
   @override
   void initState() {
@@ -32,6 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     final client = Provider.of<ApplicationModel>(context, listen: false).client;
     user = await client.users.getCurrentUser();
     userNotices = await client.users.getUserNotices(user.id);
+    userNotes = await client.users.getUserNotes(user.id);
 
     final countMap = NoticeUtilities.generateTopicCounts(userNotices);
     topicsPostedIn = countMap.length;
@@ -41,168 +45,198 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: futureProfile,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      future: futureProfile,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          if (snapshot.hasError) {
-            return Center(child: Text(snapshot.error.toString()),);
-          }
-          return Padding(
-            padding: const EdgeInsets.only(
-                left: 16.0, right: 16.0, bottom: 16.0, top: 48.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 16.0),
-                              child: CircleAvatar(
-                                radius: 75,
-                                backgroundColor: Colors.lightBlue.shade50,
-                                child: Text(
-                                  user.name[0],
-                                  style: const TextStyle(fontSize: 60),
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Text(
-                                    user.name,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.qr_code),
-                                      color: Colors.blueAccent),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: const Icon(Icons.share),
-                                  color: Colors.blueAccent,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 16.0),
-                              child: Text(
-                                "Overview",
-                                style: Theme.of(context).textTheme.headline5,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: RichText(
-                                text: TextSpan(
-                                  style: DefaultTextStyle.of(context).style,
-                                  children: [
-                                    TextSpan(
-                                      text: "Joined On: ",
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                    TextSpan(text: user.createdAt),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: RichText(
-                                text: TextSpan(
-                                  style: DefaultTextStyle.of(context).style,
-                                  children: [
-                                    TextSpan(
-                                      text: "Notices Posted: ",
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                    TextSpan(
-                                        text: userNotices.length.toString()),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: RichText(
-                                text: TextSpan(
-                                  style: DefaultTextStyle.of(context).style,
-                                  children: [
-                                    TextSpan(
-                                      text: "Topics Posted In: ",
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                    TextSpan(text: topicsPostedIn.toString()),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 16.0),
-                              child: Text(
-                                "Most Used Topics: ",
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                            ),
-                            Wrap(
-                              spacing: 8.0, // gap between adjacent chips
-                              runSpacing: 8.0,
-                              children: List<Widget>.generate(
-                                frequentTopics.length,
-                                (index) {
-                                  final topic = frequentTopics[index];
-                                  return ActionChip(
-                                    label: Text('#${topic.name}'),
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content:
-                                              Text("#${topic.name} clicked"),
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+        if (snapshot.hasError) {
+          return Center(
+            child: Text(snapshot.error.toString()),
           );
-        });
+        }
+        return Padding(
+          padding: const EdgeInsets.only(
+              left: 16.0, right: 16.0, bottom: 16.0, top: 48.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: CircleAvatar(
+                              radius: 75,
+                              backgroundColor: Colors.lightBlue.shade50,
+                              child: Text(
+                                user.name[0],
+                                style: const TextStyle(fontSize: 60),
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: Text(
+                                  user.name,
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.qr_code),
+                                    color: Colors.blueAccent),
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Icons.share),
+                                color: Colors.blueAccent,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Text(
+                              "Overview",
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: RichText(
+                              text: TextSpan(
+                                style: DefaultTextStyle.of(context).style,
+                                children: <InlineSpan>[
+                                  TextSpan(
+                                    text: "Joined On: ",
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  TextSpan(text: user.createdAt),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: RichText(
+                              text: TextSpan(
+                                style: DefaultTextStyle.of(context).style,
+                                children: <InlineSpan>[
+                                  TextSpan(
+                                    text: "Notices Posted: ",
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  TextSpan(text: userNotices.length.toString()),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: RichText(
+                              text: TextSpan(
+                                style: DefaultTextStyle.of(context).style,
+                                children: [
+                                  TextSpan(
+                                    text: "Topics Posted In: ",
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  TextSpan(text: topicsPostedIn.toString()),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Text(
+                              "Most Used Topics: ",
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                          ),
+                          Wrap(
+                            spacing: 8.0, // gap between adjacent chips
+                            runSpacing: 8.0,
+                            children: List<Widget>.generate(
+                              frequentTopics.length,
+                              (index) {
+                                final topic = frequentTopics[index];
+                                return ActionChip(
+                                  label: Text('#${topic.name}'),
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text("#${topic.name} clicked"),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Wrap(
+                  spacing: 8.0,
+                  children: <Widget>[
+                    ChoiceChip(
+                      label: const Text("Public"),
+                      selected: !_viewPrivate,
+                      avatar: const Icon(Icons.public),
+                      onSelected: (value) {
+                        if (value) setState(() => _viewPrivate = false);
+                      },
+                    ),
+                    ChoiceChip(
+                      label: const Text("Private"),
+                      selected: _viewPrivate,
+                      avatar: const Icon(Icons.public_off),
+                      onSelected: (value) {
+                        if (value) setState(() => _viewPrivate = true);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: _viewPrivate
+                      ? const Text("Viewing private")
+                      : const Text("Viewing public"),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
