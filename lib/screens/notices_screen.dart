@@ -2,6 +2,9 @@ import 'package:app/application_model.dart';
 import 'package:app/client/models/list_notice.dart';
 import 'package:app/client/models/paginated_list.dart';
 import 'package:app/client/noticebord_client.dart';
+import 'package:app/widgets/list_notice_widget.dart';
+import 'package:app/widgets/loader_widget.dart';
+import 'package:app/widgets/loading_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -31,90 +34,36 @@ class _NoticesScreenState extends State<NoticesScreen> {
       future: futureNotices,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          var response = snapshot.data!;
+          var publicNotices = snapshot.data!;
           return ListView.builder(
-            itemCount: response.nextPageUrl == null
-                ? response.data.length
-                : response.data.length + 1,
+            itemCount: publicNotices.nextPageUrl == null
+                ? publicNotices.data.length
+                : publicNotices.data.length + 1,
             itemBuilder: (context, position) {
-              if (position < response.data.length) {
-                final notice = response.data[position];
-                return Card(
-                  child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            notice.title,
-                            textAlign: TextAlign.start,
-                            style: const TextStyle(fontSize: 24.0),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            child: Wrap(
-                                spacing: 8.0,
-                                runSpacing: 8.0,
-                                children: List<Widget>.generate(
-                                  notice.topics.length,
-                                  (index) {
-                                    final topic = notice.topics[index];
-                                    return ActionChip(
-                                      label: Text("#${topic.name}"),
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                          SnackBar(
-                                            content:
-                                                Text("#${topic.name} clicked"),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                )),
-                          ),
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: Colors.grey.shade800,
-                                child: const Text('US'),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  "User",
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      )),
-                );
+              if (position < publicNotices.data.length) {
+                final notice = publicNotices.data[position];
+                return ListNoticeWidget(listNotice: notice);
               }
 
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Center(
-                  child: loading ? const CircularProgressIndicator() : ElevatedButton(
-                    onPressed: () async {
-                      setState(() {
-                        loading = true;
-                      });
+                child: LoadingButtonWidget(
+                  loading: loading,
+                  onPressed: () async {
+                    setState(() => loading = true);
 
-                      final cursor = Uri.parse(response.nextPageUrl!).queryParameters['cursor'];
-                      final notices = response.data;
-                      futureNotices = client.notices.getNotices(cursor: cursor);
+                    final cursor = Uri.parse(publicNotices.nextPageUrl!)
+                        .queryParameters['cursor'];
+                    final notices = publicNotices.data;
+                    futureNotices = client.notices.getNotices(cursor: cursor);
+                    final pNotices = await futureNotices;
 
-                      setState(() async {
-                        response = await futureNotices;
-                        response.data = [...notices, ...response.data];
-                        loading = false;
-                      });
-                    },
-                    child: const Text("Load more"),
-                  ),
+                    setState(() {
+                      publicNotices = pNotices;
+                      publicNotices.data = [...notices, ...publicNotices.data];
+                      loading = false;
+                    });
+                  },
                 ),
               );
             },
@@ -123,8 +72,7 @@ class _NoticesScreenState extends State<NoticesScreen> {
           return Text('${snapshot.error}');
         }
 
-        // By default, show a loading spinner.
-        return const Center(child: CircularProgressIndicator());
+        return const LoaderWidget();
       },
     );
   }

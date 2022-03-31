@@ -3,6 +3,7 @@ import 'package:app/client/models/list_notice.dart';
 import 'package:app/client/models/nested_topic.dart';
 import 'package:app/client/models/user.dart';
 import 'package:app/client/utilities/notice_utilities.dart';
+import 'package:app/widgets/topic_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -132,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     style:
                                         Theme.of(context).textTheme.bodyText1,
                                   ),
-                                  TextSpan(text: user.createdAt),
+                                  TextSpan(text: DateTime.parse(user.createdAt).toString()),
                                 ],
                               ),
                             ),
@@ -176,25 +177,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                               style: Theme.of(context).textTheme.bodyText1,
                             ),
                           ),
-                          Wrap(
-                            spacing: 8.0, // gap between adjacent chips
-                            runSpacing: 8.0,
-                            children: List<Widget>.generate(
-                              frequentTopics.length,
-                              (index) {
-                                final topic = frequentTopics[index];
-                                return ActionChip(
-                                  label: Text('#${topic.name}'),
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text("#${topic.name} clicked"),
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
+                          TopicListWidget(
+                            topics: frequentTopics,
+                            onPressed: (topic) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("#${topic.name} clicked"),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
