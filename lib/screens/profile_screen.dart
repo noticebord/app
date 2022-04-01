@@ -98,12 +98,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 child: IconButton(
                                     onPressed: () {},
                                     icon: const Icon(Icons.qr_code),
-                                    color: Colors.blueAccent),
+                                    color: Theme.of(context).primaryColor,
+                                ),
                               ),
                               IconButton(
                                 onPressed: () {},
                                 icon: const Icon(Icons.share),
-                                color: Colors.blueAccent,
+                                color: const Color.fromRGBO(104, 117, 245, 1),
                               ),
                             ],
                           ),

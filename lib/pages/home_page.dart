@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: BottomNavigationBar(
             onTap: _onTap,
             currentIndex: app.page,
-            selectedItemColor: ThemeData.light().primaryColor,
+            selectedItemColor: Theme.of(context).primaryColor,
             unselectedItemColor: Colors.grey,
             items: <BottomNavigationBarItem>[
               if (authenticated)
