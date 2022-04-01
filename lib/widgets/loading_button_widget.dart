@@ -1,10 +1,12 @@
+import 'package:app/widgets/loader_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LoadingButtonWidget extends StatefulWidget {
   final bool loading;
+  final Widget? child;
   final VoidCallback? onPressed;
-  const LoadingButtonWidget({Key? key, required this.loading, this.onPressed})
+  const LoadingButtonWidget({Key? key, required this.loading, required this.child, this.onPressed,})
       : super(key: key);
 
   @override
@@ -16,12 +18,12 @@ class LoadingButtonWidget extends StatefulWidget {
 class _LoadingButtonWidgetState extends State<LoadingButtonWidget> {
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Expanded(
       child: widget.loading
-          ? const CircularProgressIndicator()
+          ? const LoaderWidget()
           : ElevatedButton(
               onPressed: widget.onPressed,
-              child: const Text("Load more"),
+              child: widget.child,
             ),
     );
   }

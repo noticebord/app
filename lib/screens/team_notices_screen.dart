@@ -216,6 +216,7 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                                   const EdgeInsets.symmetric(vertical: 16.0),
                               child: LoadingButtonWidget(
                                 loading: loading,
+                                child: const Text("Load more"),
                                 onPressed: () async {
                                   setState(() => loading = true);
 
