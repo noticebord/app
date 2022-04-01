@@ -4,10 +4,16 @@ import 'package:flutter/material.dart';
 
 class LoadingButtonWidget extends StatefulWidget {
   final bool loading;
-  final Widget? child;
+  final Widget child;
+  final bool elevated;
   final VoidCallback? onPressed;
-  const LoadingButtonWidget({Key? key, required this.loading, required this.child, this.onPressed,})
-      : super(key: key);
+  const LoadingButtonWidget({
+    Key? key,
+    required this.loading,
+    required this.child,
+    this.elevated = true,
+    this.onPressed,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -21,10 +27,15 @@ class _LoadingButtonWidgetState extends State<LoadingButtonWidget> {
     return Expanded(
       child: widget.loading
           ? const LoaderWidget()
-          : ElevatedButton(
-              onPressed: widget.onPressed,
-              child: widget.child,
-            ),
+          : widget.elevated
+              ? ElevatedButton(
+                  onPressed: widget.onPressed,
+                  child: widget.child,
+                )
+              : TextButton(
+                  onPressed: widget.onPressed,
+                  child: widget.child,
+                ),
     );
   }
 }
