@@ -8,7 +8,7 @@ import 'services/topic_service.dart';
 import 'services/user_service.dart';
 
 class NoticebordClient {
-  static const String defaultBaseUrl = "https://noticebord.herokuapp.com/api";
+  static const String defaultBaseUrl = "https://noticebord.space/api";
 
   String? token;
   String baseUrl;
