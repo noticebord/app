@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const noticebordBrandColor = Color.fromRGBO(104, 117, 245, 1);
+final noticeBordMaterialColor = createMaterialColor(noticebordBrandColor);
 
 void main() {
   runApp(const NoticebordApp());
@@ -46,9 +47,7 @@ class NoticebordApp extends StatelessWidget {
       create: (context) => ApplicationModel(),
       child: MaterialApp(
         title: 'Noticebord',
-        theme: ThemeData(
-          primarySwatch: createMaterialColor(noticebordBrandColor)
-        ),
+        theme: ThemeData(primarySwatch: noticeBordMaterialColor),
         debugShowCheckedModeBanner: false, //For development purposes
         home: FutureBuilder<String?>(
             future: loadToken(),

@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Icon(
             Icons.home,
             size: 100,
-            color: ThemeData.light().primaryColor,
+            color: Theme.of(context).primaryColor,
           ),
           Text(
             "Home",
