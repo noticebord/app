@@ -36,7 +36,7 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
   }
 
   Future loadTeams([int? id]) async {
-    teams = await client.teams.getTeams();
+    teams = await client.teams.fetchTeams();
     _currentTeam = id == null
         ? teams[0]
         : teams.singleWhere((element) => element.id == id);
@@ -44,7 +44,7 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
   }
 
   Future loadTeamNotices(int id) async {
-    final response = await client.teamNotices.getTeamNotices(id);
+    final response = await client.teamNotices.fetchTeamNotices(id);
     teamNotices.addAll(response.data);
     lastResponse = response;
   }
@@ -224,7 +224,7 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                                   final cursor = Uri.parse(lastResponse.nextPageUrl!)
                                           .queryParameters['cursor'];
                                   lastResponse = await client.teamNotices
-                                      .getTeamNotices(_currentTeam.id,
+                                      .fetchTeamNotices(_currentTeam.id,
                                       cursor: cursor);
 
                                   setState(() {

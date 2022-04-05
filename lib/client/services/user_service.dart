@@ -9,9 +9,9 @@ import 'service.dart';
 class UserService extends Service{
   UserService(String? token, String baseUrl): super(token, baseUrl);
 
-  Future<List<User>> getUsers() async {
+  Future<List<User>> fetchUsers() async {
     final response = await http.get(Uri.parse("$baseUrl/users"),
-        headers: Service.defaultHeaders);
+        headers: Service.defaultHeaders, );
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
@@ -22,7 +22,7 @@ class UserService extends Service{
     }
   }
 
-  Future<User> getUser(int userId) async {
+  Future<User> fetchUser(int userId) async {
     final response = await http.get(Uri.parse("$baseUrl/users/$userId"),
         headers: Service.defaultHeaders);
 
@@ -35,7 +35,7 @@ class UserService extends Service{
     }
   }
 
-  Future<User> getCurrentUser() async {
+  Future<User> fetchCurrentUser() async {
     final response = await http.get(Uri.parse("$baseUrl/user"),
         headers: Service.defaultHeaders);
 
@@ -48,7 +48,7 @@ class UserService extends Service{
     }
   }
 
-  Future<List<ListNotice>> getUserNotices(int userId) async {
+  Future<List<ListNotice>> fetchUserNotices(int userId) async {
     final response = await http.get(Uri.parse("$baseUrl/users/$userId/notices"),
         headers: Service.defaultHeaders);
 
@@ -61,7 +61,7 @@ class UserService extends Service{
     }
   }
 
-  Future<List<ListNotice>> getUserNotes(int userId) async {
+  Future<List<ListNotice>> fetchUserNotes(int userId) async {
     final response = await http.get(Uri.parse("$baseUrl/users/$userId/notes"),
         headers: Service.defaultHeaders);
 

@@ -8,7 +8,7 @@ import 'service.dart';
 class TeamService extends Service {
   TeamService(String? token, String baseUrl) : super(token, baseUrl);
 
-  Future<List<Team>> getTeams() async {
+  Future<List<Team>> fetchTeams() async {
     final response = await http.get(Uri.parse("$baseUrl/teams"),
         headers: Service.defaultHeaders);
 
@@ -21,7 +21,7 @@ class TeamService extends Service {
     }
   }
 
-  Future<Team> getTeam(int teamId) async {
+  Future<Team> fetchTeam(int teamId) async {
     final response = await http.get(Uri.parse("$baseUrl/teams/$teamId"),
         headers: Service.defaultHeaders);
 

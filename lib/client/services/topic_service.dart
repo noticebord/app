@@ -10,7 +10,7 @@ import 'service.dart';
 class TopicService extends Service{
   TopicService(String? token, String baseUrl): super(token, baseUrl);
 
-  Future<List<Topic>> getTopics() async {
+  Future<List<Topic>> fetchTopics() async {
     final response = await http.get(Uri.parse("$baseUrl/topics"),
         headers: Service.defaultHeaders);
 
@@ -23,7 +23,7 @@ class TopicService extends Service{
     }
   }
 
-  Future<Topic> getTopic(int topicId) async {
+  Future<Topic> fetchTopic(int topicId) async {
     final response = await http.get(Uri.parse("$baseUrl/topics/$topicId"),
         headers: Service.defaultHeaders);
 
@@ -36,7 +36,7 @@ class TopicService extends Service{
     }
   }
 
-  Future<List<ListNotice>> getTopicNotices(int topicId) async {
+  Future<List<ListNotice>> fetchTopicNotices(int topicId) async {
     final response = await http.get(Uri.parse("$baseUrl/topics/$topicId/notices"),
         headers: Service.defaultHeaders);
 

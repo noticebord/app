@@ -25,7 +25,7 @@ class _NoticesScreenState extends State<NoticesScreen> {
   void initState() {
     super.initState();
     client = Provider.of<ApplicationModel>(context, listen: false).client;
-    futureNotices = client.notices.getNotices();
+    futureNotices = client.notices.fetchNotices();
   }
 
   @override
@@ -57,7 +57,7 @@ class _NoticesScreenState extends State<NoticesScreen> {
                     final cursor = Uri.parse(publicNotices.nextPageUrl!)
                         .queryParameters['cursor'];
                     final notices = publicNotices.data;
-                    futureNotices = client.notices.getNotices(cursor: cursor);
+                    futureNotices = client.notices.fetchNotices(cursor: cursor);
                     final pNotices = await futureNotices;
 
                     setState(() {

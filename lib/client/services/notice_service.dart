@@ -24,7 +24,7 @@ class NoticeService extends Service {
     }
   }
 
-  Future<PaginatedList<ListNotice>> getNotices({String? cursor}) async {
+  Future<PaginatedList<ListNotice>> fetchNotices({String? cursor}) async {
     final response = await http.get(Uri.parse("$baseUrl/notices?cursor=$cursor"),
         headers: Service.defaultHeaders);
 
@@ -37,7 +37,7 @@ class NoticeService extends Service {
     }
   }
 
-  Future<Notice> getNotice(int noticeId) async {
+  Future<Notice> fetchNotice(int noticeId) async {
     final response = await http.get(Uri.parse("$baseUrl/notices/$noticeId"),
         headers: Service.defaultHeaders);
 

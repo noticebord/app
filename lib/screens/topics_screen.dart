@@ -18,7 +18,7 @@ class _TopicsScreenState extends State<TopicsScreen> {
   void initState() {
     super.initState();
     var client = Provider.of<ApplicationModel>(context, listen: false).client;
-    futureTopics = client.topics.getTopics();
+    futureTopics = client.topics.fetchTopics();
   }
 
   @override
