@@ -74,10 +74,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: CircleAvatar(
                               radius: 75,
-                              backgroundColor: Colors.lightBlue.shade50,
-                              child: Text(
-                                user.name[0],
-                                style: const TextStyle(fontSize: 60),
+                              backgroundColor: Theme.of(context).primaryColor,
+                              child: CircleAvatar(
+                                radius: 74,
+                                backgroundImage:
+                                    NetworkImage(user.profilePhotoUrl),
                               ),
                             ),
                           ),
@@ -95,9 +96,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                               Padding(
                                 padding: const EdgeInsets.only(right: 8.0),
                                 child: IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.qr_code),
-                                    color: Theme.of(context).primaryColor,
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.qr_code),
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               IconButton(
@@ -133,7 +134,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     style:
                                         Theme.of(context).textTheme.bodyText1,
                                   ),
-                                  TextSpan(text: DateTime.parse(user.createdAt).toString()),
+                                  TextSpan(
+                                      text: DateTime.parse(user.createdAt)
+                                          .toString()),
                                 ],
                               ),
                             ),
@@ -172,9 +175,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
-                            child: Text(
-                              "Most Used Topics: ",
-                              style: Theme.of(context).textTheme.bodyText1,
+                            child: RichText(
+                              text: TextSpan(
+                                style: DefaultTextStyle.of(context).style,
+                                children: [
+                                  TextSpan(
+                                    text: "Most Used Topics: ",
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                           TopicListWidget(
