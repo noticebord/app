@@ -1,5 +1,7 @@
+import 'package:animations/animations.dart';
 import 'package:app/application_model.dart';
 import 'package:app/pages/login_page.dart';
+import 'package:app/pages/new_notice_page.dart';
 import 'package:app/screens/home_screen.dart';
 import 'package:app/screens/notices_screen.dart';
 import 'package:app/screens/profile_screen.dart';
@@ -22,8 +24,6 @@ class _HomePageState extends State<HomePage> {
   void _onTap(int index) {
     Provider.of<ApplicationModel>(context, listen: false).setPage(index);
   }
-
-  void _addNotice() {}
 
   @override
   void initState() {
@@ -92,10 +92,21 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(Icons.account_circle), label: "Profile"),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: _addNotice,
-            tooltip: 'Add a Notice',
-            child: const Icon(Icons.add),
+          floatingActionButton: OpenContainer(
+            transitionType: ContainerTransitionType.fade,
+            openBuilder: (context, openContainer) => const NewNoticePage(),
+            closedElevation: 0,
+            closedShape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(28))
+            ),
+            closedColor: Theme.of(context).colorScheme.secondary,
+            closedBuilder: (context, openContainer) {
+              return SizedBox(
+                height: 56,
+                width: 56,
+                child: Center(child: Icon(Icons.add, color: Theme.of(context).colorScheme.onSecondary)),
+              );
+            }
           ),
         );
       },
