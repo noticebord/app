@@ -1,4 +1,6 @@
+
 import 'package:app/application_model.dart';
+import 'package:app/helpers/device_helpers.dart';
 import 'package:app/pages/home_page.dart';
 import 'package:app/pages/login_page.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 const noticebordBrandColor = Color.fromRGBO(104, 117, 245, 1);
 final noticeBordMaterialColor = createMaterialColor(noticebordBrandColor);
 
-void main() {
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  print(await DeviceHelpers.deviceName);
   runApp(const NoticebordApp());
 }
 

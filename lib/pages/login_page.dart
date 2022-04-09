@@ -1,6 +1,7 @@
 import 'package:app/application_model.dart';
 import 'package:app/client/noticebord_client.dart';
 import 'package:app/client/requests/authenticate_request.dart';
+import 'package:app/helpers/device_helpers.dart';
 import 'package:app/pages/home_page.dart';
 import 'package:app/widgets/loading_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -37,9 +38,13 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: TextField(
                   controller: emailController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Email Address',
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: 'Email address',
+                    icon: Icon(
+                      Icons.person,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ),
               ),
@@ -47,10 +52,16 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: TextField(
                   obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
                   controller: passwordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
                     labelText: 'Password',
+                    icon: Icon(
+                      Icons.lock,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                 ),
               ),
@@ -62,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                   final email = emailController.text;
                   final password = passwordController.text;
 
-                  if (email == "") {
+                  if (email.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text("Email address cannot be empty"),
@@ -71,11 +82,9 @@ class _LoginPageState extends State<LoginPage> {
                     setState(() => loading = false);
                     return;
                   }
-                  if (password == "") {
+                  if (password.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Password cannot be empty"),
-                      ),
+                      const SnackBar(content: Text("Password cannot be empty")),
                     );
                     setState(() => loading = false);
                     return;
@@ -84,7 +93,11 @@ class _LoginPageState extends State<LoginPage> {
                   try {
                     final app =
                         Provider.of<ApplicationModel>(context, listen: false);
-                    final request = AuthenticateRequest(email, password, "App");
+                    final request = AuthenticateRequest(
+                      email.trim(),
+                      password.trim(),
+                      "Noticebord App on ${await DeviceHelpers.deviceName}",
+                    );
                     final token = await NoticebordClient.getToken(
                       request,
                       baseUrl: "https://noticebord.herokuapp.com/api",
