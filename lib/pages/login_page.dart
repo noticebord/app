@@ -85,7 +85,10 @@ class _LoginPageState extends State<LoginPage> {
                     final app =
                         Provider.of<ApplicationModel>(context, listen: false);
                     final request = AuthenticateRequest(email, password, "App");
-                    final token = await NoticebordClient.getToken(request);
+                    final token = await NoticebordClient.getToken(
+                      request,
+                      baseUrl: "https://noticebord.herokuapp.com/api",
+                    );
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.setString("token", token);
                     app.setToken(token);
@@ -106,17 +109,19 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
               ),
-              if (!loading) TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomePage(title: "Noticebord"),
-                    ),
-                  );
-                },
-                child: const Text('Skip for Now'),
-              ),
+              if (!loading)
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const HomePage(title: "Noticebord"),
+                      ),
+                    );
+                  },
+                  child: const Text('Skip for Now'),
+                ),
             ],
           ),
         ),
