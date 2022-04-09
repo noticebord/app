@@ -42,8 +42,9 @@ class NoticeService extends Service {
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
-      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return Notice.fromJSON(parsed);
+      final parsed = jsonDecode(response.body);
+      final notice = Notice.fromJSON(parsed);
+      return notice;
     } else {
       throw Exception(
           "Failed to fetch notice - ${response.statusCode}: ${response.reasonPhrase}");

@@ -1,11 +1,14 @@
 import 'package:app/client/models/list_notice.dart';
+import 'package:app/widgets/notice_author_widget.dart';
 import 'package:app/widgets/topic_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class ListNoticeWidget extends StatefulWidget {
   final ListNotice listNotice;
-  const ListNoticeWidget({Key? key, required this.listNotice})
+  final VoidCallback onTap;
+  const ListNoticeWidget(
+      {Key? key, required this.listNotice, required this.onTap})
       : super(key: key);
 
   @override
@@ -19,6 +22,8 @@ class _ListNoticeWidgetState extends State<ListNoticeWidget> {
   Widget build(BuildContext context) {
     final notice = widget.listNotice;
     return Card(
+        child: InkWell(
+      onTap: widget.onTap,
       child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -35,31 +40,14 @@ class _ListNoticeWidgetState extends State<ListNoticeWidget> {
                   topics: notice.topics,
                   onPressed: (topic) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("#${topic.name} clicked"),
-                      ),
+                      SnackBar(content: Text("#${topic.name} clicked")),
                     );
                   },
                 ),
               ),
-
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.grey.shade800,
-                    child: const Text('U'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      "User",
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  )
-                ],
-              )
+              NoticeAuthorWidget(author: notice.author)
             ],
           )),
-    );
+    ));
   }
 }

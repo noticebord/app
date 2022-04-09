@@ -4,6 +4,7 @@ import 'package:app/client/models/team.dart';
 import 'package:app/client/noticebord_client.dart';
 import 'package:app/widgets/loader_widget.dart';
 import 'package:app/widgets/loading_button_widget.dart';
+import 'package:app/widgets/notice_author_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -186,26 +187,7 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                                                 const TextStyle(fontSize: 24.0),
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            CircleAvatar(
-                                              backgroundColor:
-                                                  Colors.grey.shade800,
-                                              child:
-                                                  Text(notice.author.name[0]),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0),
-                                              child: Text(
-                                                notice.author.name,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleLarge,
-                                              ),
-                                            )
-                                          ],
-                                        )
+                                        NoticeAuthorWidget(author: notice.author)
                                       ],
                                     )),
                               );

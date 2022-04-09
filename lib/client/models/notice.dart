@@ -20,7 +20,7 @@ class Notice {
       parsedJson['body'],
       parsedJson['created_at'],
       parsedJson['updated_at'],
-      parsedJson["topics"].map((t) => NestedTopic.fromJSON(t)),
+      parsedJson["topics"].map<NestedTopic>((t) => NestedTopic.fromJSON(t)).toList(),
       parsedJson['author'] == null ? null : User.fromJSON(parsedJson['author']),
     );
   }

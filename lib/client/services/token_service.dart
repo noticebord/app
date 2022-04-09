@@ -10,6 +10,7 @@ class TokenService {
     String baseUrl,
     AuthenticateRequest request,
   ) async {
+    print("$baseUrl/tokens");
     final response = await http.post(
       Uri.parse("$baseUrl/tokens"),
       headers: Service.defaultHeaders,

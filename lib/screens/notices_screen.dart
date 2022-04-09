@@ -1,7 +1,9 @@
+import 'package:animations/animations.dart';
 import 'package:app/application_model.dart';
 import 'package:app/client/models/list_notice.dart';
 import 'package:app/client/models/paginated_list.dart';
 import 'package:app/client/noticebord_client.dart';
+import 'package:app/pages/notice_details_page.dart';
 import 'package:app/widgets/list_notice_widget.dart';
 import 'package:app/widgets/loader_widget.dart';
 import 'package:app/widgets/loading_button_widget.dart';
@@ -42,7 +44,21 @@ class _NoticesScreenState extends State<NoticesScreen> {
             itemBuilder: (context, position) {
               if (position < publicNotices.data.length) {
                 final notice = publicNotices.data[position];
-                return ListNoticeWidget(listNotice: notice);
+                return OpenContainer<bool>(
+                  transitionType: ContainerTransitionType.fade,
+                  openBuilder: (context, openContainer) => NoticeDetailsPage(
+                    noticeId: notice.id,
+                  ),
+                  tappable: false,
+                  closedShape: const RoundedRectangleBorder(),
+                  closedElevation: 0,
+                  closedBuilder: (context, openContainer) {
+                    return ListNoticeWidget(
+                      listNotice: notice,
+                      onTap: openContainer,
+                    );
+                  },
+                );
               }
 
               return Padding(
