@@ -1,10 +1,12 @@
+import 'package:animations/animations.dart';
 import 'package:app/client/models/list_team_notice.dart';
 import 'package:app/client/models/paginated_list.dart';
 import 'package:app/client/models/team.dart';
 import 'package:app/client/noticebord_client.dart';
+import 'package:app/pages/team_notice_details_page.dart';
+import 'package:app/widgets/list_team_notice_widget.dart';
 import 'package:app/widgets/loader_widget.dart';
 import 'package:app/widgets/loading_button_widget.dart';
-import 'package:app/widgets/notice_author_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -170,26 +172,23 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                           itemBuilder: (context, position) {
                             if (position < teamNotices.length) {
                               final notice = teamNotices[position];
-                              return Card(
-                                child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 16.0),
-                                          child: Text(
-                                            notice.title,
-                                            textAlign: TextAlign.start,
-                                            style:
-                                                const TextStyle(fontSize: 24.0),
-                                          ),
-                                        ),
-                                        NoticeAuthorWidget(author: notice.author)
-                                      ],
-                                    )),
+                              return OpenContainer<bool>(
+                                transitionType: ContainerTransitionType.fade,
+                                openBuilder: (context, openContainer) {
+                                  return TeamNoticeDetailsPage(
+                                    teamId: _currentTeam.id,
+                                    teamNoticeId: notice.id,
+                                  );
+                                },
+                                tappable: false,
+                                closedShape: const RoundedRectangleBorder(),
+                                closedElevation: 0,
+                                closedBuilder: (context, openContainer) {
+                                  return ListTeamNoticeWidget(
+                                    listTeamNotice: notice,
+                                    onTap: openContainer,
+                                  );
+                                },
                               );
                             }
 
@@ -203,11 +202,12 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                                 onPressed: () async {
                                   setState(() => loading = true);
 
-                                  final cursor = Uri.parse(lastResponse.nextPageUrl!)
+                                  final cursor =
+                                      Uri.parse(lastResponse.nextPageUrl!)
                                           .queryParameters['cursor'];
                                   lastResponse = await client.teamNotices
                                       .fetchTeamNotices(_currentTeam.id,
-                                      cursor: cursor);
+                                          cursor: cursor);
 
                                   setState(() {
                                     teamNotices.addAll(lastResponse.data);

@@ -46,7 +46,8 @@ class TeamNoticeService extends Service {
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
-      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
+      final parsed = jsonDecode(response.body);
+      print(parsed);
       return TeamNotice.fromJSON(parsed);
     } else {
       throw Exception(

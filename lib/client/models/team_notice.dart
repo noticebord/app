@@ -18,7 +18,7 @@ class TeamNotice {
       parsedJson['body'],
       parsedJson['created_at'],
       parsedJson['updated_at'],
-      User.fromJSON(parsedJson['updated_at']),
+      User.fromJSON(parsedJson['author']),
     );
   }
 }
