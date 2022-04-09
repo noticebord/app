@@ -21,6 +21,7 @@ class _TeamNoticeDetailsPageState extends State<TeamNoticeDetailsPage> {
 
   @override
   void initState() {
+    super.initState();
     final client = Provider.of<ApplicationModel>(context, listen: false).client;
     futureTeamNotice = client.teamNotices.fetchTeamNotice(widget.teamId, widget.teamNoticeId);
   }

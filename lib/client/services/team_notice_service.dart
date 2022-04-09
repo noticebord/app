@@ -47,7 +47,6 @@ class TeamNoticeService extends Service {
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body);
-      print(parsed);
       return TeamNotice.fromJSON(parsed);
     } else {
       throw Exception(

@@ -4,7 +4,6 @@ import 'package:app/widgets/loader_widget.dart';
 import 'package:app/widgets/notice_author_widget.dart';
 import 'package:app/widgets/topic_list_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class NoticeDetailsPage extends StatefulWidget {
@@ -22,6 +21,7 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
 
   @override
   void initState() {
+    super.initState();
     final client = Provider.of<ApplicationModel>(context, listen: false).client;
     futureNotice = client.notices.fetchNotice(widget.noticeId);
   }

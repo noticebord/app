@@ -2,7 +2,6 @@ import 'package:app/client/models/list_notice.dart';
 import 'package:app/widgets/notice_author_widget.dart';
 import 'package:app/widgets/topic_list_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ListNoticeWidget extends StatefulWidget {
   final ListNotice listNotice;

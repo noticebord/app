@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class LoaderWidget extends StatelessWidget {
   const LoaderWidget({Key? key}) : super(key: key);

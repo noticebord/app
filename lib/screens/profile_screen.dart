@@ -5,7 +5,6 @@ import 'package:app/client/models/user.dart';
 import 'package:app/client/utilities/notice_utilities.dart';
 import 'package:app/widgets/topic_list_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
