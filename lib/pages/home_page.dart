@@ -29,7 +29,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     final app = Provider.of<ApplicationModel>(context, listen: false);
-    app.setPage(app.token == null ? 1 : 2);
+    Future.delayed(Duration.zero, () async {
+      final page = app.token == null ? 1 : 2;
+      app.setPage(page);
+    });
   }
 
   @override
@@ -93,21 +96,21 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           floatingActionButton: OpenContainer(
-            transitionType: ContainerTransitionType.fade,
-            openBuilder: (context, openContainer) => const NewNoticePage(),
-            closedElevation: 0,
-            closedShape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(28))
-            ),
-            closedColor: Theme.of(context).colorScheme.secondary,
-            closedBuilder: (context, openContainer) {
-              return SizedBox(
-                height: 56,
-                width: 56,
-                child: Center(child: Icon(Icons.add, color: Theme.of(context).colorScheme.onSecondary)),
-              );
-            }
-          ),
+              transitionType: ContainerTransitionType.fade,
+              openBuilder: (context, openContainer) => const NewNoticePage(),
+              closedElevation: 0,
+              closedShape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(28))),
+              closedColor: Theme.of(context).colorScheme.secondary,
+              closedBuilder: (context, openContainer) {
+                return SizedBox(
+                  height: 56,
+                  width: 56,
+                  child: Center(
+                      child: Icon(Icons.add,
+                          color: Theme.of(context).colorScheme.onSecondary)),
+                );
+              }),
         );
       },
     );

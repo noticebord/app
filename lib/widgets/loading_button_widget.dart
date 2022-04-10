@@ -23,7 +23,7 @@ class LoadingButtonWidget extends StatefulWidget {
 class _LoadingButtonWidgetState extends State<LoadingButtonWidget> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Container(
       child: widget.loading
           ? const LoaderWidget()
           : widget.elevated

@@ -20,8 +20,60 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+  Future tryLogin() async {
+    setState(() => loading = true);
+    final email = emailController.text;
+    final password = passwordController.text;
+
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Email cannot be empty")),
+      );
+      setState(() => loading = false);
+      return;
+    }
+    if (password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Password cannot be empty")),
+      );
+      setState(() => loading = false);
+      return;
+    }
+
+    try {
+      final app = Provider.of<ApplicationModel>(context, listen: false);
+      final request = AuthenticateRequest(
+        email.trim(),
+        password.trim(),
+        "Noticebord App on ${await DeviceHelpers.deviceName}",
+      );
+      final token = await NoticebordClient.getToken(
+        request,
+        baseUrl: "https://noticebord.herokuapp.com/api",
+      );
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString("token", token);
+      app.setToken(token);
+      setState(() => loading = false);
+    } on Exception catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+      setState(() => loading = false);
+      return;
+    }
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomePage(title: "Noticebord"),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -34,107 +86,55 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.only(bottom: 32.0),
                 child: Image.asset('assets/logo.png', width: 100, height: 100),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: 'Email address',
-                    icon: Icon(
-                      Icons.person,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: 'Email address',
+                  icon: Icon(Icons.person, color: primaryColor),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: TextField(
-                  obscureText: true,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: 'Password',
-                    icon: Icon(
-                      Icons.lock,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
+              const SizedBox(height: 8.0),
+              TextField(
+                obscureText: true,
+                enableSuggestions: false,
+                autocorrect: false,
+                controller: passwordController,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: 'Password',
+                  icon: Icon(Icons.lock, color: primaryColor),
                 ),
               ),
+              const SizedBox(height: 16.0),
               LoadingButtonWidget(
                 loading: loading,
-                child: const Text('Log In'),
-                onPressed: () async {
-                  setState(() => loading = true);
-                  final email = emailController.text;
-                  final password = passwordController.text;
-
-                  if (email.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Email address cannot be empty"),
-                      ),
-                    );
-                    setState(() => loading = false);
-                    return;
-                  }
-                  if (password.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Password cannot be empty")),
-                    );
-                    setState(() => loading = false);
-                    return;
-                  }
-
-                  try {
-                    final app =
-                        Provider.of<ApplicationModel>(context, listen: false);
-                    final request = AuthenticateRequest(
-                      email.trim(),
-                      password.trim(),
-                      "Noticebord App on ${await DeviceHelpers.deviceName}",
-                    );
-                    final token = await NoticebordClient.getToken(
-                      request,
-                      baseUrl: "https://noticebord.herokuapp.com/api",
-                    );
-                    final prefs = await SharedPreferences.getInstance();
-                    await prefs.setString("token", token);
-                    app.setToken(token);
-                    setState(() => loading = false);
-                  } on Exception catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(e.toString())),
-                    );
-                    setState(() => loading = false);
-                    return;
-                  }
-
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomePage(title: "Noticebord"),
-                    ),
-                  );
-                },
-              ),
-              if (!loading)
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const HomePage(title: "Noticebord"),
-                      ),
-                    );
-                  },
-                  child: const Text('Skip for Now'),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                  child: Text(
+                    'Log In',
+                  ),
                 ),
+                onPressed: () async => await tryLogin(),
+              ),
+              const SizedBox(height: 8.0),
+              TextButton(
+                onPressed: loading
+                    ? null
+                    : () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const HomePage(title: "Noticebord"),
+                          ),
+                        );
+                      },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  child: Text('Skip for Now'),
+                ),
+              ),
             ],
           ),
         ),

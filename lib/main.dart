@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const noticebordBrandColor = Color.fromRGBO(104, 117, 245, 1);
-final noticeBordMaterialColor = createMaterialColor(noticebordBrandColor);
+final noticebordMaterialColor = createMaterialColor(noticebordBrandColor);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,7 +49,10 @@ class NoticebordApp extends StatelessWidget {
       create: (context) => ApplicationModel(),
       child: MaterialApp(
         title: 'Noticebord',
-        theme: ThemeData(primarySwatch: noticeBordMaterialColor, textTheme: GoogleFonts.nunitoTextTheme()),
+        theme: ThemeData(
+          primarySwatch: noticebordMaterialColor,
+          textTheme: GoogleFonts.nunitoTextTheme(),
+        ),
         debugShowCheckedModeBanner: false, //For development purposes
         home: FutureBuilder<String?>(
             future: loadToken(),
@@ -58,8 +61,9 @@ class NoticebordApp extends StatelessWidget {
                 return const CircularProgressIndicator();
               }
 
+              final token = snapshot.data;
               final app = Provider.of<ApplicationModel>(context, listen: false);
-              app.setToken(snapshot.data);
+              Future.delayed(Duration.zero, () async => app.setToken(token));
               return snapshot.hasData
                   ? const HomePage(title: "Noticebord")
                   : const LoginPage();
