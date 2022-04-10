@@ -28,7 +28,7 @@ class TopicService extends Service{
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
-      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
+      final parsed = jsonDecode(response.body);
       return Topic.fromJSON(parsed);
     } else {
       throw Exception(

@@ -121,17 +121,15 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                 onPressed: loading
                     ? null
-                    : () {
-                        Navigator.pushReplacement(
+                    : () => Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
                                 const HomePage(title: "Noticebord"),
                           ),
-                        );
-                      },
+                        ),
                 child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16.0),
+                  padding: EdgeInsets.symmetric(vertical: 12.0),
                   child: Text('Skip for Now'),
                 ),
               ),

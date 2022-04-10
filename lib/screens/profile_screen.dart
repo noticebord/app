@@ -47,6 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     return FutureBuilder(
       future: futureProfile,
       builder: (context, snapshot) {
+        final bodyText1 = Theme.of(context).textTheme.bodyText1;
         if (snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -131,8 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 children: <InlineSpan>[
                                   TextSpan(
                                     text: "Joined On: ",
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                    style: bodyText1,
                                   ),
                                   TextSpan(
                                       text: DateTime.parse(user.createdAt)
@@ -149,8 +149,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 children: <InlineSpan>[
                                   TextSpan(
                                     text: "Notices Posted: ",
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                    style: bodyText1,
                                   ),
                                   TextSpan(text: userNotices.length.toString()),
                                 ],
@@ -165,8 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 children: [
                                   TextSpan(
                                     text: "Topics Posted In: ",
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                    style: bodyText1,
                                   ),
                                   TextSpan(text: topicsPostedIn.toString()),
                                 ],
@@ -181,23 +179,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 children: [
                                   TextSpan(
                                     text: "Most Used Topics: ",
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                    style: bodyText1,
                                   )
                                 ],
                               ),
                             ),
                           ),
-                          TopicListWidget(
-                            topics: frequentTopics,
-                            onPressed: (topic) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("#${topic.name} clicked"),
-                                ),
-                              );
-                            },
-                          ),
+                          TopicListWidget(topics: frequentTopics),
                         ],
                       ),
                     ),

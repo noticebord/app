@@ -32,7 +32,7 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notice Details"),
+        title: const Text("Notice Details")
       ),
       body: FutureBuilder<Notice>(
         future: futureNotice,
@@ -66,14 +66,7 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    TopicListWidget(
-                      topics: notice.topics,
-                      onPressed: (topic) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("#${topic.name} clicked")),
-                        );
-                      },
-                    ),
+                    TopicListWidget(topics: notice.topics),
                     const SizedBox(height: 16),
                     NoticeAuthorWidget(author: notice.author)
                   ],

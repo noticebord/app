@@ -1,11 +1,11 @@
-import 'package:app/client/models/nested_topic.dart';
+  import 'package:app/client/models/nested_topic.dart';
+import 'package:app/pages/topic_details_page.dart';
 import 'package:flutter/material.dart';
 
 class TopicListWidget extends StatefulWidget {
   final List<NestedTopic> topics;
-  final Function(NestedTopic topic) onPressed;
 
-  const TopicListWidget({required this.topics, required this.onPressed, Key? key}) : super(key: key);
+  const TopicListWidget({required this.topics, Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -25,7 +25,12 @@ class _TopicListWidgetState extends State<TopicListWidget> {
           final topic = widget.topics[index];
           return ActionChip(
             label: Text("#${topic.name}"),
-            onPressed: () => widget.onPressed(topic),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TopicDetailsPage(topicId: topic.id),
+              ),
+            ),
           );
         },
       ),

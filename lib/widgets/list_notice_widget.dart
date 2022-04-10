@@ -34,14 +34,7 @@ class _ListNoticeWidgetState extends State<ListNoticeWidget> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 8.0),
-              TopicListWidget(
-                topics: notice.topics,
-                onPressed: (topic) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("#${topic.name} clicked")),
-                  );
-                },
-              ),
+              TopicListWidget(topics: notice.topics),
               const SizedBox(height: 12.0),
               NoticeAuthorWidget(author: notice.author)
             ],
