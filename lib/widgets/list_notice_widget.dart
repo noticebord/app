@@ -21,9 +21,9 @@ class _ListNoticeWidgetState extends State<ListNoticeWidget> {
   Widget build(BuildContext context) {
     final notice = widget.listNotice;
     return Card(
-        child: InkWell(
-      onTap: widget.onTap,
-      child: Padding(
+      child: InkWell(
+        onTap: widget.onTap,
+        child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,22 +31,23 @@ class _ListNoticeWidgetState extends State<ListNoticeWidget> {
               Text(
                 notice.title,
                 textAlign: TextAlign.start,
-                style: const TextStyle(fontSize: 24.0),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: TopicListWidget(
-                  topics: notice.topics,
-                  onPressed: (topic) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("#${topic.name} clicked")),
-                    );
-                  },
-                ),
+              const SizedBox(height: 8.0),
+              TopicListWidget(
+                topics: notice.topics,
+                onPressed: (topic) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("#${topic.name} clicked")),
+                  );
+                },
               ),
+              const SizedBox(height: 12.0),
               NoticeAuthorWidget(author: notice.author)
             ],
-          )),
-    ));
+          ),
+        ),
+      ),
+    );
   }
 }

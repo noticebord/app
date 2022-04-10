@@ -41,13 +41,13 @@ class _TopicsScreenState extends State<TopicsScreen> {
                           child: Text(
                             "#${topic.name}",
                             textAlign: TextAlign.start,
-                            style: const TextStyle(fontSize: 24.0),
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
                         RichText(
                           text: TextSpan(
                             text: "${topic.count} ",
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.subtitle1,
                             children: const [TextSpan(text: "notices")],
                           ),
                         ),

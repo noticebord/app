@@ -15,7 +15,7 @@ class _NoticeAuthorWidgetState extends State<NoticeAuthorWidget> {
   @override
   Widget build(BuildContext context) {
     final author = widget.author;
-    final titleLarge = Theme.of(context).textTheme.titleLarge;
+    final titleLarge = Theme.of(context).textTheme.titleMedium;
 
     return Row(
       children: [

@@ -17,8 +17,8 @@ class _TopicListWidgetState extends State<TopicListWidget> {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 8.0,
-      runSpacing: 8.0,
+      spacing: 4.0,
+      runSpacing: 4.0,
       children: List<Widget>.generate(
         widget.topics.length,
         (index) {

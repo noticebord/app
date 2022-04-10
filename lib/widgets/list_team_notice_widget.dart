@@ -17,25 +17,24 @@ class _ListTeamNoticeWidgetState extends State<ListTeamNoticeWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: InkWell(
-      onTap: widget.onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: Text(
+      child: InkWell(
+        onTap: widget.onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
                 widget.listTeamNotice.title,
                 textAlign: TextAlign.start,
-                style: const TextStyle(fontSize: 24.0),
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-            ),
-            NoticeAuthorWidget(author: widget.listTeamNotice.author)
-          ],
+              const SizedBox(height: 8.0),
+              NoticeAuthorWidget(author: widget.listTeamNotice.author)
+            ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }

@@ -2,6 +2,7 @@ import 'package:app/application_model.dart';
 import 'package:app/pages/home_page.dart';
 import 'package:app/pages/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,7 +49,7 @@ class NoticebordApp extends StatelessWidget {
       create: (context) => ApplicationModel(),
       child: MaterialApp(
         title: 'Noticebord',
-        theme: ThemeData(primarySwatch: noticeBordMaterialColor),
+        theme: ThemeData(primarySwatch: noticeBordMaterialColor, textTheme: GoogleFonts.nunitoTextTheme()),
         debugShowCheckedModeBanner: false, //For development purposes
         home: FutureBuilder<String?>(
             future: loadToken(),
