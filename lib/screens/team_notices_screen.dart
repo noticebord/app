@@ -7,6 +7,7 @@ import 'package:app/pages/team_notice_details_page.dart';
 import 'package:app/widgets/list_team_notice_widget.dart';
 import 'package:app/widgets/loader_widget.dart';
 import 'package:app/widgets/loading_button_widget.dart';
+import 'package:app/widgets/team_selection_sheet_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -73,79 +74,25 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                   done
                       ? ActionChip(
                           avatar: CircleAvatar(
-                            child: Text(_currentTeam.name[0]),
+                            child: Text(_currentTeam.name[0])
                           ),
                           label: Text(_currentTeam.name),
                           onPressed: () {
                             showModalBottomSheet<void>(
                               context: context,
                               builder: (BuildContext context) {
-                                return SizedBox(
-                                  height: 300,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 16.0,
-                                          right: 16.0,
-                                          top: 16.0,
-                                          bottom: 8.0,
-                                        ),
-                                        child: SizedBox(
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                "Select a Team",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5,
-                                              ),
-                                              const Spacer(),
-                                              IconButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                                icon: const Icon(Icons.close),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      const Divider(
-                                        thickness: 1.0,
-                                      ),
-                                      Expanded(
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.vertical,
-                                          shrinkWrap: true,
-                                          itemCount: teams.length,
-                                          itemBuilder: (context, position) {
-                                            final team = teams[position];
-                                            return ListTile(
-                                              tileColor:
-                                                  team.id == _currentTeam.id
-                                                      ? Colors.blue[50]
-                                                      : null,
-                                              subtitle:
-                                                  team.id == _currentTeam.id
-                                                      ? const Text(
-                                                          "Currently selected")
-                                                      : null,
-                                              title: Text(team.name),
-                                              onTap: () {
-                                                setState(() {
-                                                  teamNotices.clear();
-                                                  _currentTeam = team;
-                                                  futureTeamNotices =
-                                                      loadTeamNotices(team.id);
-                                                });
-                                                Navigator.pop(context);
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                return TeamSelectionSheetWidget(
+                                  teams: teams,
+                                  currentTeam: _currentTeam,
+                                  onSelected: (team) {
+                                    setState(() {
+                                      teamNotices.clear();
+                                      _currentTeam = team;
+                                      futureTeamNotices =
+                                          loadTeamNotices(team.id);
+                                    });
+                                    Navigator.pop(context);
+                                  },
                                 );
                               },
                             );
