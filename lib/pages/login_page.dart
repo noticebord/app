@@ -3,7 +3,6 @@ import 'package:app/client/noticebord_client.dart';
 import 'package:app/client/requests/authenticate_request.dart';
 import 'package:app/helpers/device_helpers.dart';
 import 'package:app/pages/home_page.dart';
-import 'package:app/widgets/loading_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +15,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool passwordVisible = false;
+  void togglePassword() {
+    setState(() {
+      passwordVisible = !passwordVisible;
+    });
+  }
+
   bool loading = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -73,66 +79,156 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).primaryColor;
+    final buttonStyle = ButtonStyle(
+      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      ),
+    );
+
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.only(bottom: 32.0),
-                child: Image.asset('assets/logo.png', width: 100, height: 100),
-              ),
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: 'Email address',
-                  icon: Icon(Icons.person, color: primaryColor),
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              TextField(
-                obscureText: true,
-                enableSuggestions: false,
-                autocorrect: false,
-                controller: passwordController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: 'Password',
-                  icon: Icon(Icons.lock, color: primaryColor),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              LoadingButtonWidget(
-                loading: loading,
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
-                  child: Text(
-                    'Log In',
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24.0, 40.0, 24.0, 0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Login to your\naccount',
+                    style: Theme.of(context).textTheme.headline4,
                   ),
-                ),
-                onPressed: () async => await tryLogin(),
+                  const SizedBox(height: 20),
+                  Image.asset(
+                    'assets/accent.png',
+                    width: 99,
+                    height: 4,
+                  ),
+                ],
               ),
-              const SizedBox(height: 8.0),
-              TextButton(
-                onPressed: loading
-                    ? null
-                    : () => Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const HomePage(title: "Noticebord"),
+              const SizedBox(height: 56),
+              Form(
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: TextFormField(
+                        controller: emailController,
+
+                        decoration: InputDecoration(
+                          // contentPadding: const EdgeInsets.symmetric(),
+                          hintText: 'user@mail.com',
+                          prefixIcon: const Icon(Icons.person),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(20.0)
                           ),
                         ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
-                  child: Text('Skip for Now'),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 24
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black12,
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: TextFormField(
+                        controller: passwordController,
+                        obscureText: !passwordVisible,
+                        decoration: InputDecoration(
+                          hintText: 'password',
+                          prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            color: Colors.grey,
+                            splashRadius: 1,
+                            icon: Icon(passwordVisible
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined),
+                            onPressed: togglePassword,
+                          ),
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+              const SizedBox(height: 24),
+              ListView(
+                shrinkWrap: true,
+                children: [
+                  TextButton(
+                    onPressed: () {},
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text("Forgot Password?"),
+                    ),
+                    style: buttonStyle,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: loading ? null : tryLogin,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text(loading ? 'Loading...' : 'Login'),
+                    ),
+                    style: buttonStyle,
+                  ),
+                  const SizedBox(height: 16),
+                  Center(
+                    child: Text('OR',
+                        style: Theme.of(context).textTheme.headline6),
+                  ),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: loading
+                        ? null
+                        : () => Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const HomePage(title: "Noticebord"),
+                              ),
+                            ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text('Skip for now'),
+                    ),
+                    style: buttonStyle,
+                  ),
+                  const SizedBox(height: 50),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account? ",
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          'Register',
+                          style:
+                              Theme.of(context).textTheme.bodyText1!.copyWith(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
             ],
           ),
         ),
