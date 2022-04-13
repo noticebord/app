@@ -9,14 +9,22 @@ class ApplicationModel with ChangeNotifier {
 
   int page = 0;
   String? token;
+  int? user;
 
   void setPage(int page) {
     this.page = page;
     notifyListeners();
   }
 
-  void setToken(String? token) {
+  void setAuth(String token, int user) {
     this.token = token;
+    this.user = user;
+    notifyListeners();
+  }
+
+  void removeAuth() {
+    token = null;
+    user = null;
     notifyListeners();
   }
 }

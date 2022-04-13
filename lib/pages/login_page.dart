@@ -47,19 +47,25 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
+      // Try logging in.
+      const baseUrl = "https://noticebord.herokuapp.com/api";
       final app = Provider.of<ApplicationModel>(context, listen: false);
       final request = AuthenticateRequest(
         email.trim(),
         password.trim(),
         "Noticebord App on ${await DeviceHelpers.deviceName}",
       );
-      final token = await NoticebordClient.getToken(
-        request,
-        baseUrl: "https://noticebord.herokuapp.com/api",
-      );
+
+      // Get token and use it to get logged in user
+      final token = await NoticebordClient.getToken(request, baseUrl: baseUrl);
+      final client = NoticebordClient(token: token, baseUrl: baseUrl);
+      final user = await client.users.fetchCurrentUser();
+
+      // Done. Persist everything.
+      app.setAuth(token, user.id);
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString("token", token);
-      app.setToken(token);
+      await prefs.setInt("user", user.id);
       setState(() => loading = false);
     } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -121,21 +127,17 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: TextFormField(
                         controller: emailController,
-
                         decoration: InputDecoration(
                           // contentPadding: const EdgeInsets.symmetric(),
                           hintText: 'user@mail.com',
                           prefixIcon: const Icon(Icons.person),
                           border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(20.0)
-                          ),
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(20.0)),
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 24
-                    ),
+                    const SizedBox(height: 24),
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.black12,

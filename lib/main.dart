@@ -9,14 +9,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 const noticebordBrandColor = Color.fromRGBO(104, 117, 245, 1);
 final noticebordMaterialColor = createMaterialColor(noticebordBrandColor);
 
+class Auth {
+  final String? token;
+  final int? user;
+
+  const Auth(this.token, this.user);
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const NoticebordApp());
 }
 
-Future<String?> loadToken() async {
+Future<Auth> loadAuth() async {
   final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('token');
+  final token = prefs.getString('token');
+  final user = prefs.getInt('user');
+  return Auth(token, user);
 }
 
 MaterialColor createMaterialColor(Color color) {
@@ -54,16 +63,20 @@ class NoticebordApp extends StatelessWidget {
           textTheme: GoogleFonts.nunitoTextTheme(),
         ),
         debugShowCheckedModeBanner: false, //For development purposes
-        home: FutureBuilder<String?>(
-            future: loadToken(),
+        home: FutureBuilder<Auth>(
+            future: loadAuth(),
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
                 return const CircularProgressIndicator();
               }
 
-              final token = snapshot.data;
+              final auth = snapshot.data!;
               final app = Provider.of<ApplicationModel>(context, listen: false);
-              Future.delayed(Duration.zero, () async => app.setToken(token));
+              Future.delayed(Duration.zero, () {
+                if (auth.token != null && auth.user != null) {
+                  app.setAuth(auth.token!, auth.user!);
+                }
+              });
               return snapshot.hasData
                   ? const HomePage(title: "Noticebord")
                   : const LoginPage();

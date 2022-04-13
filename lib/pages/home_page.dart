@@ -52,7 +52,8 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () async {
                         final prefs = await SharedPreferences.getInstance();
                         await prefs.remove("token");
-                        app.setToken(null);
+                        await prefs.remove("user");
+                        app.removeAuth();
                         app.setPage(1);
                       },
                     )

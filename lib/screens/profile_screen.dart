@@ -32,10 +32,15 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Future loadUserAndNotices() async {
-    final client = Provider.of<ApplicationModel>(context, listen: false).client;
-    user = await client.users.fetchCurrentUser();
-    userNotices = await client.users.fetchUserNotices(user.id);
-    userNotes = await client.users.fetchUserNotes(user.id);
+    final app = Provider.of<ApplicationModel>(context, listen: false);
+    final client = app.client;
+    final userId = app.user!;
+
+    await Future.wait<void>([
+      (() async => user = await client.users.fetchUser(userId))(),
+      (() async => userNotices = await client.users.fetchUserNotices(userId))(),
+      (() async => userNotes = await client.users.fetchUserNotes(userId))(),
+    ]);
 
     final countMap = NoticeUtilities.generateTopicCounts(userNotices);
     topicsPostedIn = countMap.length;
