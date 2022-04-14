@@ -68,7 +68,7 @@ class NoticeService extends Service {
     final response = await http.delete(Uri.parse("$baseUrl/notices/$noticeId"),
         headers: Service.defaultHeaders);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 204) {
       return;
     } else {
       throw Exception(

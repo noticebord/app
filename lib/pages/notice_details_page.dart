@@ -17,65 +17,124 @@ class NoticeDetailsPage extends StatefulWidget {
 }
 
 class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
-  late Future<Notice> futureNotice;
+  late Future futureNotice;
+  late Notice notice;
 
   @override
   void initState() {
     super.initState();
+    futureNotice = setNotice();
+  }
+
+  Future setNotice() async {
     final client = Provider.of<ApplicationModel>(context, listen: false).client;
-    futureNotice = client.notices.fetchNotice(widget.noticeId);
+    notice = await client.notices.fetchNotice(widget.noticeId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final app = Provider.of<ApplicationModel>(context);
     final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Notice Details")
-      ),
-      body: FutureBuilder<Notice>(
-        future: futureNotice,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const LoaderWidget();
-          }
-
-          final notice = snapshot.data!;
-          return ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      notice.title,
-                      style: textTheme.headline5!.copyWith(
-                        // color: Colors.black54,
-                        fontSize: 30,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      notice.body,
-                      style: textTheme.bodyText2!.copyWith(
-                        // color: Colors.black54,
-                        height: 1.5,
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    TopicListWidget(topics: notice.topics),
-                    const SizedBox(height: 16),
-                    NoticeAuthorWidget(author: notice.author)
-                  ],
-                ),
+    Future<void> _showConfirmDeleteDialog() async {
+      bool returnValue = false;
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Delete Notice?'),
+            content: SingleChildScrollView(
+              child: Column(
+                children: const <Widget>[
+                  Text('Would you like to delete this notice?'),
+                  Text('This action is not reversible.'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Confirm'),
+                onPressed: () async {
+                  await app.client.notices.deleteNotice(notice.id);
+                  returnValue = true;
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () => Navigator.of(context).pop(),
               ),
             ],
           );
         },
-      ),
+      );
+
+      if (returnValue) Navigator.pop(context);
+    }
+
+    return FutureBuilder(
+      future: futureNotice,
+      builder: (context, snapshot) {
+        final done = snapshot.connectionState == ConnectionState.done;
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Notice Details"),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: done &&
+                        notice.author != null &&
+                        notice.author!.id == app.user
+                    ? () {}
+                    : null,
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: done &&
+                        notice.author != null &&
+                        notice.author!.id == app.user
+                    ? _showConfirmDeleteDialog
+                    : null,
+              ),
+            ],
+          ),
+          body: !done
+              ? const LoaderWidget()
+              : ListView(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            notice.title,
+                            style: textTheme.headline5!.copyWith(
+                              // color: Colors.black54,
+                              fontSize: 30,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            notice.body,
+                            style: textTheme.bodyText2!.copyWith(
+                              // color: Colors.black54,
+                              height: 1.5,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TopicListWidget(topics: notice.topics),
+                          const SizedBox(height: 16),
+                          NoticeAuthorWidget(author: notice.author)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+        );
+      },
     );
   }
 }
