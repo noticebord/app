@@ -37,7 +37,7 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
     final textTheme = Theme.of(context).textTheme;
 
     Future<void> _showConfirmDeleteDialog() async {
-      bool returnValue = false;
+      bool shouldDelete = false;
       await showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
@@ -56,8 +56,10 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
               TextButton(
                 child: const Text('Confirm'),
                 onPressed: () async {
-                  await app.client.notices.deleteNotice(notice.id);
-                  returnValue = true;
+                  shouldDelete = true;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Deleting notice...")),
+                  );
                   Navigator.of(context).pop();
                 },
               ),
@@ -70,7 +72,20 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
         },
       );
 
-      if (returnValue) Navigator.pop(context);
+      if (shouldDelete) {
+        try {
+          await app.client.notices.deleteNotice(notice.id);
+          app.removeNotice(notice.id);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Your notice was deleted.")),
+          );
+          Navigator.pop(context);
+        } on Exception {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Your notice could not be deleted.")),
+          );
+        }
+      }
     }
 
     return FutureBuilder(
