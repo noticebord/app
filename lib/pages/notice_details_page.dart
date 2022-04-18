@@ -42,7 +42,6 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
 
       await showDialog<void>(
         context: context,
-        barrierDismissible: false, // user must tap button!
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Delete Notice?'),
@@ -136,7 +135,6 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
                           Text(
                             notice.title,
                             style: textTheme.headline5!.copyWith(
-                              // color: Colors.black54,
                               fontSize: 30,
                             ),
                           ),
@@ -144,7 +142,6 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
                           Text(
                             notice.body,
                             style: textTheme.bodyText2!.copyWith(
-                              // color: Colors.black54,
                               height: 1.5,
                               fontSize: 16,
                             ),

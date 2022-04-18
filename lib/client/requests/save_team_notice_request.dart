@@ -3,4 +3,6 @@ class SaveTeamNoticeRequest {
   String body;
 
   SaveTeamNoticeRequest(this.title, this.body);
+
+  Map toJson() => {"title": title, "body": body};
 }

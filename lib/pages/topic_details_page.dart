@@ -85,7 +85,6 @@ class _TopicDetailsPageState extends State<TopicDetailsPage> {
               }
 
               if (position < topicNotices.length + 1) {
-                print(position);
                 final notice = topicNotices[position - 1];
                 return OpenContainer<bool>(
                   transitionType: ContainerTransitionType.fade,

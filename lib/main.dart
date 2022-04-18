@@ -23,8 +23,17 @@ Future<void> main() async {
 
 Future<Auth> loadAuth() async {
   final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('token');
-  final user = prefs.getInt('user');
+  var token = prefs.getString('token');
+  var user = prefs.getInt('user');
+
+  // Check for inconsistent states
+  if (token == null || user == null) {
+    prefs.remove('token');
+    prefs.remove('user');
+    token = null;
+    user = null;
+  }
+
   return Auth(token, user);
 }
 

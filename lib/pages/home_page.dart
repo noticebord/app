@@ -35,6 +35,60 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _showConfirmLogoutDialog() async {
+    final app = Provider.of<ApplicationModel>(context, listen: false);
+    bool shouldLogout = false;
+
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Log Out?'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: const <Widget>[
+                Text('Would you like to log out of your account?'),
+                ExpansionTile(
+                  title: Text('Advanced'),
+                  subtitle: Text('View advanced options.'),
+                  children: <Widget>[
+                    SwitchListTile.adaptive(
+                      value: false,
+                      title: Text("Revoke token (Experimental)"),
+                      subtitle: Text("Also delete the current access token"),
+                      onChanged: null,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Log out'),
+              onPressed: () {
+                shouldLogout = true;
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldLogout) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove("token");
+      await prefs.remove("user");
+      app.removeAuth();
+      app.setPage(1);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ApplicationModel>(
@@ -49,13 +103,7 @@ class _HomePageState extends State<HomePage> {
                   ? IconButton(
                       icon: const Icon(Icons.logout),
                       tooltip: "Log out",
-                      onPressed: () async {
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.remove("token");
-                        await prefs.remove("user");
-                        app.removeAuth();
-                        app.setPage(1);
-                      },
+                      onPressed: _showConfirmLogoutDialog,
                     )
                   : IconButton(
                       icon: const Icon(Icons.login),
@@ -85,8 +133,8 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: BottomNavigationBar(
             onTap: _onTap,
             currentIndex: app.page,
+            unselectedItemColor: Theme.of(context).unselectedWidgetColor,
             selectedItemColor: Theme.of(context).primaryColor,
-            unselectedItemColor: Colors.grey,
             items: <BottomNavigationBarItem>[
               if (authenticated)
                 const BottomNavigationBarItem(

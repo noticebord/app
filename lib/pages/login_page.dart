@@ -106,74 +106,66 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Text(
                     'Login to your\naccount',
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                          color: Colors.black,
+                        ),
                   ),
                   const SizedBox(height: 20),
-                  Image.asset(
-                    'assets/accent.png',
-                    width: 99,
-                    height: 4,
-                  ),
+                  Image.asset('assets/accent.png', width: 99, height: 4),
                 ],
               ),
               const SizedBox(height: 56),
               Form(
                 child: Column(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: TextFormField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          // contentPadding: const EdgeInsets.symmetric(),
-                          hintText: 'user@mail.com',
-                          prefixIcon: const Icon(Icons.person),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(20.0)),
+                    TextFormField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context).primaryColor.withAlpha(30),
+                        labelText: "Email address",
+                        hintText: 'user@mail.com',
+                        prefixIcon: const Icon(Icons.person_pin),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
                     ),
                     const SizedBox(height: 24),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black12,
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: TextFormField(
-                        controller: passwordController,
-                        obscureText: !passwordVisible,
-                        decoration: InputDecoration(
-                          hintText: 'password',
-                          prefixIcon: const Icon(Icons.lock),
-                          suffixIcon: IconButton(
-                            color: Colors.grey,
-                            splashRadius: 1,
-                            icon: Icon(passwordVisible
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
-                            onPressed: togglePassword,
-                          ),
-                          border: const OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
+                    TextFormField(
+                      controller: passwordController,
+                      obscureText: !passwordVisible,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context).primaryColor.withAlpha(30),
+                        labelText: "Password",
+                        hintText: '••••••••',
+                        prefixIcon: const Icon(Icons.shield),
+                        suffixIcon: IconButton(
+                          splashRadius: 1,
+                          icon: Icon(passwordVisible
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined),
+                          onPressed: togglePassword,
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               ListView(
                 shrinkWrap: true,
                 children: [
                   TextButton(
                     onPressed: () {},
                     child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
                       child: Text("Forgot Password?"),
                     ),
                     style: buttonStyle,
@@ -192,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text('OR',
                         style: Theme.of(context).textTheme.headline6),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   TextButton(
                     onPressed: loading
                         ? null
@@ -204,10 +196,14 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                     child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
                       child: Text('Skip for now'),
                     ),
-                    style: buttonStyle,
+                    style: buttonStyle.copyWith(
+                      backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).primaryColor.withAlpha(30),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 50),
                   Row(

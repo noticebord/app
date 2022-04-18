@@ -13,11 +13,7 @@ class TokenService {
     final response = await http.post(
       Uri.parse("$baseUrl/tokens"),
       headers: Service.defaultHeaders,
-      body: jsonEncode(<String, String>{
-        'email': request.email,
-        'password': request.password,
-        'device_name': request.deviceName
-      }),
+      body: jsonEncode(request),
     );
 
     if (response.statusCode == 200) {
