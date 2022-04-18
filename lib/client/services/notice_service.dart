@@ -51,13 +51,13 @@ class NoticeService extends Service {
     }
   }
 
-  Future<Notice> updateNotice(int noticeId, SaveNoticeRequest request) async {
+  Future<ListNotice> updateNotice(int noticeId, SaveNoticeRequest request) async {
     final response = await http.put(Uri.parse("$baseUrl/notices/$noticeId"),
-        headers: Service.defaultHeaders, body: request);
+        headers: Service.defaultHeaders, body: jsonEncode(request));
 
     if (response.statusCode == 200) {
-      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return Notice.fromJSON(parsed);
+      final parsed = jsonDecode(response.body);
+      return ListNotice.fromJSON(parsed);
     } else {
       throw Exception(
           "Failed to update notice - ${response.statusCode}: ${response.reasonPhrase}");

@@ -1,5 +1,6 @@
 import 'package:app/application_model.dart';
 import 'package:app/client/models/notice.dart';
+import 'package:app/pages/edit_notice_page.dart';
 import 'package:app/widgets/loader_widget.dart';
 import 'package:app/widgets/notice_author_widget.dart';
 import 'package:app/widgets/topic_list_widget.dart';
@@ -38,6 +39,7 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
 
     Future<void> _showConfirmDeleteDialog() async {
       bool shouldDelete = false;
+
       await showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
@@ -101,7 +103,15 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
                 onPressed: done &&
                         notice.author != null &&
                         notice.author!.id == app.user
-                    ? () {}
+                    ? () async {
+                        final route = MaterialPageRoute<bool>(builder: (context) {
+                          return EditNoticePage(noticeId: notice.id);
+                        });
+                        final dirty = await Navigator.push<bool>(context, route);
+                        if (dirty != null && dirty) {
+                          setState(() => futureNotice = setNotice());
+                        }
+                      }
                     : null,
               ),
               IconButton(

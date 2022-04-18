@@ -40,6 +40,9 @@ dependencies:
   animations: ^2.0.2
   device_info_plus: ^3.2.2
   google_fonts: ^2.3.1
+  flutter_tagging:
+    git:
+      url: https://github.com/bradintheusa/flutter_tagging
 
 dev_dependencies:
   flutter_test:
