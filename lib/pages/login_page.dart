@@ -6,6 +6,7 @@ import 'package:app/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -163,7 +164,20 @@ class _LoginPageState extends State<LoginPage> {
                 shrinkWrap: true,
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final app = Provider.of<ApplicationModel>(
+                        context,
+                        listen: false,
+                      );
+                      final registerUrl = "${app.url}/forgot-password";
+                      if (!await launch(registerUrl)) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Could not launch URL."),
+                          ),
+                        );
+                      }
+                    },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
                       child: Text("Forgot Password?"),
@@ -188,13 +202,15 @@ class _LoginPageState extends State<LoginPage> {
                   TextButton(
                     onPressed: loading
                         ? null
-                        : () => Navigator.pushReplacement(
+                        : () {
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
                                     const HomePage(title: "Noticebord"),
                               ),
-                            ),
+                            );
+                          },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
                       child: Text('Skip for now'),
@@ -214,7 +230,20 @@ class _LoginPageState extends State<LoginPage> {
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () async {
+                          final app = Provider.of<ApplicationModel>(
+                            context,
+                            listen: false,
+                          );
+                          final registerUrl = "${app.url}/register";
+                          if (!await launch(registerUrl)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Could not launch URL."),
+                              ),
+                            );
+                          }
+                        },
                         child: Text(
                           'Register',
                           style:

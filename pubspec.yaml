@@ -43,6 +43,7 @@ dependencies:
   flutter_tagging:
     git:
       url: https://github.com/bradintheusa/flutter_tagging
+  url_launcher: ^6.0.20
 
 dev_dependencies:
   flutter_test:
