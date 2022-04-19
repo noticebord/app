@@ -95,7 +95,6 @@ class _EditNoticePageState extends State<EditNoticePage> {
                         );
 
                         try {
-                          // print("Request: ${jsonEncode(request) }");
                           final newNotice = await client.notices
                               .updateNotice(notice.id, request);
                           if (!request.public) {

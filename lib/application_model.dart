@@ -93,4 +93,18 @@ class ApplicationModel with ChangeNotifier {
     teamNotices = notices;
     notifyListeners();
   }
+
+  void updateTeamNotice(int id, ListTeamNotice notice) {
+    final index = teamNotices.indexWhere((notice) => notice.id == id);
+    if (index >= 0) {
+      teamNotices[index] = notice;
+    }
+
+    notifyListeners();
+  }
+
+  void removeTeamNotice(int id) {
+    teamNotices.removeWhere((notice) => notice.id == id);
+    notifyListeners();
+  }
 }

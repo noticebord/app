@@ -16,7 +16,7 @@ class TeamNoticeService extends Service {
     final response = await http.post(
         Uri.parse("$baseUrl/teams/$teamId/notices"),
         headers: Service.defaultHeaders,
-        body: request);
+        body: jsonEncode(request));
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
@@ -54,16 +54,16 @@ class TeamNoticeService extends Service {
     }
   }
 
-  Future<TeamNotice> updateTeamNotice(
+  Future<ListTeamNotice> updateTeamNotice(
       int teamId, int noticeId, SaveTeamNoticeRequest request) async {
     final response = await http.put(
         Uri.parse("$baseUrl/teams/$teamId/notices/$noticeId"),
         headers: Service.defaultHeaders,
-        body: request);
+        body: jsonEncode(request));
 
     if (response.statusCode == 200) {
-      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return TeamNotice.fromJSON(parsed);
+      final parsed = jsonDecode(response.body);
+      return ListTeamNotice.fromJSON(parsed);
     } else {
       throw Exception(
           "Failed to update team notice - ${response.statusCode}: ${response.reasonPhrase}");
@@ -75,7 +75,7 @@ class TeamNoticeService extends Service {
         Uri.parse("$baseUrl/teams/$teamId/notices/$noticeId"),
         headers: Service.defaultHeaders);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 204) {
       return;
     } else {
       throw Exception(

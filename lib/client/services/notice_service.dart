@@ -13,7 +13,7 @@ class NoticeService extends Service {
 
   Future<Notice> createNotice(SaveNoticeRequest request) async {
     final response = await http.post(Uri.parse("$baseUrl/notices"),
-        headers: Service.defaultHeaders, body: request);
+        headers: Service.defaultHeaders, body: jsonEncode(request));
 
     if (response.statusCode == 200) {
       final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
