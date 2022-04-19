@@ -1,4 +1,5 @@
 import 'package:app/client/models/list_notice.dart';
+import 'package:app/client/models/list_team_notice.dart';
 import 'package:app/client/noticebord_client.dart';
 import 'package:flutter/foundation.dart';
 
@@ -12,6 +13,7 @@ class ApplicationModel with ChangeNotifier {
   int? user;
   List<ListNotice> notices = [];
   List<ListNotice> topicNotices = [];
+  List<ListTeamNotice> teamNotices = [];
 
   // Page
 
@@ -77,6 +79,18 @@ class ApplicationModel with ChangeNotifier {
   void removeNotice(int id) {
     notices.removeWhere((notice) => notice.id == id);
     topicNotices.removeWhere((notice) => notice.id == id);
+    notifyListeners();
+  }
+
+  // Team Notices
+
+  void addTeamNotices(List<ListTeamNotice> notices) {
+    teamNotices.addAll(notices);
+    notifyListeners();
+  }
+
+  void setTeamNotices(List<ListTeamNotice> notices) {
+    teamNotices = notices;
     notifyListeners();
   }
 }

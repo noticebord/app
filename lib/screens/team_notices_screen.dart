@@ -29,7 +29,7 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
 
   Future? futureTeamNotices;
   late PaginatedList<ListTeamNotice> lastResponse;
-  List<ListTeamNotice> teamNotices = <ListTeamNotice>[];
+  // List<ListTeamNotice> teamNotices = <ListTeamNotice>[];
   bool loading = false;
 
   @override
@@ -48,8 +48,9 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
   }
 
   Future loadTeamNotices(int id) async {
+    final app = Provider.of<ApplicationModel>(context, listen: false);
     final response = await client.teamNotices.fetchTeamNotices(id);
-    teamNotices.addAll(response.data);
+    app.addTeamNotices(response.data);
     lastResponse = response;
   }
 
@@ -73,9 +74,8 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                   const Spacer(),
                   done
                       ? ActionChip(
-                          avatar: CircleAvatar(
-                            child: Text(_currentTeam.name[0])
-                          ),
+                          avatar:
+                              CircleAvatar(child: Text(_currentTeam.name[0])),
                           label: Text(_currentTeam.name),
                           onPressed: () {
                             showModalBottomSheet<void>(
@@ -85,8 +85,12 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                                   teams: teams,
                                   currentTeam: _currentTeam,
                                   onSelected: (team) {
+                                    final app = Provider.of<ApplicationModel>(
+                                      context,
+                                      listen: false,
+                                    );
                                     setState(() {
-                                      teamNotices.clear();
+                                      app.setTeamNotices([]);
                                       _currentTeam = team;
                                       futureTeamNotices =
                                           loadTeamNotices(team.id);
@@ -111,57 +115,62 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                 return Expanded(
                   child: snapshot.connectionState != ConnectionState.done
                       ? const LoaderWidget()
-                      : ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          itemCount: lastResponse.nextPageUrl == null
-                              ? teamNotices.length
-                              : teamNotices.length + 1,
-                          itemBuilder: (context, position) {
-                            if (position < teamNotices.length) {
-                              final notice = teamNotices[position];
-                              return OpenContainer<bool>(
-                                transitionType: ContainerTransitionType.fade,
-                                openBuilder: (context, openContainer) {
-                                  return TeamNoticeDetailsPage(
-                                    teamId: _currentTeam.id,
-                                    teamNoticeId: notice.id,
+                      : Consumer<ApplicationModel>(
+                          builder: (context, app, child) {
+                            return ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: lastResponse.nextPageUrl == null
+                                  ? app.teamNotices.length
+                                  : app.teamNotices.length + 1,
+                              itemBuilder: (context, position) {
+                                if (position < app.teamNotices.length) {
+                                  final notice = app.teamNotices[position];
+                                  return OpenContainer<bool>(
+                                    transitionType:
+                                        ContainerTransitionType.fade,
+                                    openBuilder: (context, openContainer) {
+                                      return TeamNoticeDetailsPage(
+                                        teamId: _currentTeam.id,
+                                        teamNoticeId: notice.id,
+                                      );
+                                    },
+                                    tappable: false,
+                                    closedShape: const RoundedRectangleBorder(),
+                                    closedElevation: 0,
+                                    closedBuilder: (context, openContainer) {
+                                      return ListTeamNoticeWidget(
+                                        listTeamNotice: notice,
+                                        onTap: openContainer,
+                                      );
+                                    },
                                   );
-                                },
-                                tappable: false,
-                                closedShape: const RoundedRectangleBorder(),
-                                closedElevation: 0,
-                                closedBuilder: (context, openContainer) {
-                                  return ListTeamNoticeWidget(
-                                    listTeamNotice: notice,
-                                    onTap: openContainer,
-                                  );
-                                },
-                              );
-                            }
+                                }
 
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 16.0),
-                              child: LoadingButtonWidget(
-                                loading: loading,
-                                elevated: false,
-                                child: const Text("Load more"),
-                                onPressed: () async {
-                                  setState(() => loading = true);
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0),
+                                  child: LoadingButtonWidget(
+                                    loading: loading,
+                                    elevated: false,
+                                    child: const Text("Load more"),
+                                    onPressed: () async {
+                                      setState(() => loading = true);
 
-                                  final cursor =
-                                      Uri.parse(lastResponse.nextPageUrl!)
-                                          .queryParameters['cursor'];
-                                  lastResponse = await client.teamNotices
-                                      .fetchTeamNotices(_currentTeam.id,
-                                          cursor: cursor);
+                                      final cursor =
+                                          Uri.parse(lastResponse.nextPageUrl!)
+                                              .queryParameters['cursor'];
+                                      lastResponse = await client.teamNotices
+                                          .fetchTeamNotices(_currentTeam.id,
+                                              cursor: cursor);
 
-                                  setState(() {
-                                    teamNotices.addAll(lastResponse.data);
-                                    loading = false;
-                                  });
-                                },
-                              ),
+                                      setState(() {
+                                        app.addTeamNotices(lastResponse.data);
+                                        loading = false;
+                                      });
+                                    },
+                                  ),
+                                );
+                              },
                             );
                           },
                         ),
