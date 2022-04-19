@@ -11,11 +11,16 @@ class ApplicationModel with ChangeNotifier {
   String? token;
   int? user;
   List<ListNotice> notices = [];
+  List<ListNotice> topicNotices = [];
+
+  // Page
 
   void setPage(int page) {
     this.page = page;
     notifyListeners();
   }
+
+  // Auth
 
   void setAuth(String token, int user) {
     this.token = token;
@@ -29,6 +34,8 @@ class ApplicationModel with ChangeNotifier {
     notifyListeners();
   }
 
+  // Notices & Topic Notices
+
   void addNotices(List<ListNotice> notices) {
     this.notices.addAll(notices);
     notifyListeners();
@@ -39,14 +46,37 @@ class ApplicationModel with ChangeNotifier {
     notifyListeners();
   }
 
+  void addTopicNotices(List<ListNotice> notices) {
+    topicNotices.addAll(notices);
+    notifyListeners();
+  }
+
+  void setTopicNotices(List<ListNotice> notices) {
+    topicNotices = notices;
+    notifyListeners();
+  }
+
   void updateNotice(int id, ListNotice notice) {
-    final index = notices.indexWhere((notice) => notice.id == id);
-    notices[index] = notice;
+    bool predicate(ListNotice notice) => notice.id == id;
+
+    // Update the notices view
+    final noticesIndex = notices.indexWhere(predicate);
+    if (noticesIndex >= 0) {
+      notices[noticesIndex] = notice;
+    }
+
+    // Also update the topic notices view
+    final topicNoticesIndex = topicNotices.indexWhere(predicate);
+    if (topicNoticesIndex >= 0) {
+      topicNotices[topicNoticesIndex] = notice;
+    }
+
     notifyListeners();
   }
 
   void removeNotice(int id) {
     notices.removeWhere((notice) => notice.id == id);
+    topicNotices.removeWhere((notice) => notice.id == id);
     notifyListeners();
   }
 }

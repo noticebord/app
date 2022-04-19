@@ -25,7 +25,6 @@ class _TopicDetailsPageState extends State<TopicDetailsPage> {
 
   late Topic topic;
   late PaginatedList<ListNotice> lastResponse;
-  late List<ListNotice> topicNotices;
 
   late Future futureTopicDetails;
 
@@ -34,8 +33,9 @@ class _TopicDetailsPageState extends State<TopicDetailsPage> {
   }
 
   Future fetchTopicNotices(int topicId) async {
+    final app = Provider.of<ApplicationModel>(context, listen: false);
     lastResponse = await client.topics.fetchTopicNotices(topicId);
-    topicNotices = lastResponse.data;
+    app.setTopicNotices(lastResponse.data);
   }
 
   @override
@@ -60,71 +60,73 @@ class _TopicDetailsPageState extends State<TopicDetailsPage> {
             return const LoaderWidget();
           }
 
-          final itemCount = lastResponse.nextPageUrl == null
-              ? topicNotices.length + 1
-              : topicNotices.length + 2;
-          return ListView.builder(
-            itemCount: itemCount,
-            itemBuilder: (context, position) {
-              if (position == 0) {
-                return MaterialBanner(
-                  content: Text("#${topic.name} - ${topic.count} notices"),
-                  actions: [
-                    TextButton(
-                      onPressed: () {},
-                      child: Row(
-                        children: const [
-                          Icon(Icons.add),
-                          SizedBox(width: 4.0),
-                          Text("Create New"),
-                        ],
-                      ),
-                    )
-                  ],
-                );
-              }
-
-              if (position < topicNotices.length + 1) {
-                final notice = topicNotices[position - 1];
-                return OpenContainer<bool>(
-                  transitionType: ContainerTransitionType.fade,
-                  openBuilder: (context, openContainer) {
-                    return NoticeDetailsPage(noticeId: notice.id);
-                  },
-                  tappable: false,
-                  closedShape: const RoundedRectangleBorder(),
-                  closedElevation: 0,
-                  closedBuilder: (context, openContainer) {
-                    return ListNoticeWidget(
-                      listNotice: notice,
-                      onTap: openContainer,
+          return Consumer<ApplicationModel>(
+            builder: (context, app, child) {
+              final itemCount = lastResponse.nextPageUrl == null
+                  ? app.topicNotices.length + 1
+                  : app.topicNotices.length + 2;
+              return ListView.builder(
+                itemCount: itemCount,
+                itemBuilder: (context, position) {
+                  if (position == 0) {
+                    return MaterialBanner(
+                      content: Text("#${topic.name} - ${topic.count} notices"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {},
+                          child: Row(
+                            children: const [
+                              Icon(Icons.add),
+                              SizedBox(width: 4.0),
+                              Text("Create New"),
+                            ],
+                          ),
+                        )
+                      ],
                     );
-                  },
-                );
-              }
+                  }
 
-              return Padding(
-                padding:
-                const EdgeInsets.symmetric(vertical: 16.0),
-                child: LoadingButtonWidget(
-                  loading: loading,
-                  elevated: false,
-                  child: const Text("Load more"),
-                  onPressed: () async {
-                    setState(() => loading = true);
+                  if (position < app.topicNotices.length + 1) {
+                    final notice = app.topicNotices[position - 1];
+                    return OpenContainer<bool>(
+                      transitionType: ContainerTransitionType.fade,
+                      openBuilder: (context, openContainer) {
+                        return NoticeDetailsPage(noticeId: notice.id);
+                      },
+                      tappable: false,
+                      closedShape: const RoundedRectangleBorder(),
+                      closedElevation: 0,
+                      closedBuilder: (context, openContainer) {
+                        return ListNoticeWidget(
+                          listNotice: notice,
+                          onTap: openContainer,
+                        );
+                      },
+                    );
+                  }
 
-                    final cursor =
-                    Uri.parse(lastResponse.nextPageUrl!)
-                        .queryParameters['cursor'];
-                    lastResponse = await client.topics
-                        .fetchTopicNotices(topic.id, cursor: cursor);
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: LoadingButtonWidget(
+                      loading: loading,
+                      elevated: false,
+                      child: const Text("Load more"),
+                      onPressed: () async {
+                        setState(() => loading = true);
 
-                    setState(() {
-                      topicNotices.addAll(lastResponse.data);
-                      loading = false;
-                    });
-                  },
-                ),
+                        final cursor = Uri.parse(lastResponse.nextPageUrl!)
+                            .queryParameters['cursor'];
+                        lastResponse = await client.topics
+                            .fetchTopicNotices(topic.id, cursor: cursor);
+
+                        setState(() {
+                          app.addTopicNotices(lastResponse.data);
+                          loading = false;
+                        });
+                      },
+                    ),
+                  );
+                },
               );
             },
           );
