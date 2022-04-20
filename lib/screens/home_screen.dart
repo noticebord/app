@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Theme.of(context).primaryColor,
           ),
           Text(
-            "Home",
+            'Home',
             style: Theme.of(context).textTheme.headline4,
           ),
         ],

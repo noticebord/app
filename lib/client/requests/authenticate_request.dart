@@ -6,8 +6,8 @@ class AuthenticateRequest {
   AuthenticateRequest(this.email, this.password, this.deviceName);
 
   Map toJson() => {
-        "email": email,
-        "password": password,
-        "device_name": deviceName,
+        'email': email,
+        'password': password,
+        'device_name': deviceName,
       };
 }

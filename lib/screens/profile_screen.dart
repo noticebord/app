@@ -125,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: Text(
-                              "Overview",
+                              'Overview',
                               style: Theme.of(context).textTheme.headline5,
                             ),
                           ),
@@ -136,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 style: DefaultTextStyle.of(context).style,
                                 children: <InlineSpan>[
                                   TextSpan(
-                                    text: "Joined On: ",
+                                    text: 'Joined On: ',
                                     style: bodyText1,
                                   ),
                                   TextSpan(
@@ -153,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 style: DefaultTextStyle.of(context).style,
                                 children: <InlineSpan>[
                                   TextSpan(
-                                    text: "Notices Posted: ",
+                                    text: 'Notices Posted: ',
                                     style: bodyText1,
                                   ),
                                   TextSpan(text: userNotices.length.toString()),
@@ -168,7 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 style: DefaultTextStyle.of(context).style,
                                 children: [
                                   TextSpan(
-                                    text: "Topics Posted In: ",
+                                    text: 'Topics Posted In: ',
                                     style: bodyText1,
                                   ),
                                   TextSpan(text: topicsPostedIn.toString()),
@@ -183,7 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 style: DefaultTextStyle.of(context).style,
                                 children: [
                                   TextSpan(
-                                    text: "Most Used Topics: ",
+                                    text: 'Most Used Topics: ',
                                     style: bodyText1,
                                   )
                                 ],
@@ -203,7 +203,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   spacing: 8.0,
                   children: <Widget>[
                     ChoiceChip(
-                      label: const Text("Public"),
+                      label: const Text('Public'),
                       selected: !_viewPrivate,
                       avatar: const Icon(Icons.public),
                       onSelected: (value) {
@@ -211,7 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       },
                     ),
                     ChoiceChip(
-                      label: const Text("Private"),
+                      label: const Text('Private'),
                       selected: _viewPrivate,
                       avatar: const Icon(Icons.public_off),
                       onSelected: (value) {
@@ -224,8 +224,8 @@ class _ProfileScreenState extends State<ProfileScreen>
               Expanded(
                 child: Center(
                   child: _viewPrivate
-                      ? const Text("Viewing private")
-                      : const Text("Viewing public"),
+                      ? const Text('Viewing private')
+                      : const Text('Viewing public'),
                 ),
               ),
             ],

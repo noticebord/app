@@ -12,9 +12,9 @@ class _NewNoticePageState extends State<NewNoticePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("New Notice")
+        title: const Text('New Notice')
       ),
-      body: const Center(child: Text("I will create a new notice here.")),
+      body: const Center(child: Text('I will create a new notice here.')),
     );
   }
 }

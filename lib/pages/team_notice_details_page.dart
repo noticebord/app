@@ -62,7 +62,7 @@ class _TeamNoticeDetailsPageState extends State<TeamNoticeDetailsPage> {
                 onPressed: () async {
                   shouldDelete = true;
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Deleting team notice...")),
+                    const SnackBar(content: Text('Deleting team notice...')),
                   );
                   Navigator.of(context).pop();
                 },
@@ -82,12 +82,12 @@ class _TeamNoticeDetailsPageState extends State<TeamNoticeDetailsPage> {
               .deleteTeamNotice(widget.teamId, teamNotice.id);
           app.removeTeamNotice(teamNotice.id);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Your notice was deleted.")),
+            const SnackBar(content: Text('Your notice was deleted.')),
           );
           Navigator.pop(context);
         } on Exception {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Your notice could not be deleted.")),
+            const SnackBar(content: Text('Your notice could not be deleted.')),
           );
         }
       }
@@ -98,7 +98,7 @@ class _TeamNoticeDetailsPageState extends State<TeamNoticeDetailsPage> {
       builder: (context, snapshot) {
         final done = snapshot.connectionState == ConnectionState.done;
         return Scaffold(
-          appBar: AppBar(title: const Text("Team Notice Details"), actions: [
+          appBar: AppBar(title: const Text('Team Notice Details'), actions: [
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: done && teamNotice.author.id == app.user
@@ -111,7 +111,9 @@ class _TeamNoticeDetailsPageState extends State<TeamNoticeDetailsPage> {
                       });
                       final dirty = await Navigator.push<bool>(context, route);
                       if (dirty != null && dirty) {
-                        setState(() => futureTeamNotice = setTeamNotice());
+                        setState(() {
+                          futureTeamNotice = setTeamNotice();
+                        });
                       }
                     }
                   : null,

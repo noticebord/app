@@ -1,5 +1,4 @@
-import 'package:app/client/models/list_notice.dart';
-import 'package:app/client/models/nested_topic.dart';
+import 'package:app/client/models/models.dart';
 
 class NoticeUtilities {
   static Map<String, NestedTopicCount> generateTopicCounts(

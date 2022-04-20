@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:app/application_model.dart';
 import 'package:app/client/models/list_team_notice.dart';
 import 'package:app/client/models/paginated_list.dart';
 import 'package:app/client/models/team.dart';
@@ -10,8 +11,6 @@ import 'package:app/widgets/loading_button_widget.dart';
 import 'package:app/widgets/team_selection_sheet_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../application_model.dart';
 
 class TeamNoticesScreen extends StatefulWidget {
   const TeamNoticesScreen({Key? key}) : super(key: key);
@@ -29,7 +28,6 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
 
   Future? futureTeamNotices;
   late PaginatedList<ListTeamNotice> lastResponse;
-  // List<ListTeamNotice> teamNotices = <ListTeamNotice>[];
   bool loading = false;
 
   @override
@@ -103,7 +101,7 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                           })
                       : ActionChip(
                           avatar: const CircularProgressIndicator(),
-                          label: const Text("Loading..."),
+                          label: const Text('Loading...'),
                           onPressed: () {},
                         ),
                 ],
@@ -152,7 +150,7 @@ class _TeamNoticesScreenState extends State<TeamNoticesScreen> {
                                   child: LoadingButtonWidget(
                                     loading: loading,
                                     elevated: false,
-                                    child: const Text("Load more"),
+                                    child: const Text('Load more'),
                                     onPressed: () async {
                                       setState(() => loading = true);
 

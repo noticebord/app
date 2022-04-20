@@ -70,7 +70,7 @@ class _EditTeamNoticePageState extends State<EditTeamNoticePage> {
         final done = snapshot.connectionState == ConnectionState.done;
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Edit Team Notice"),
+            title: const Text('Edit Team Notice'),
             actions: [
               IconButton(
                 icon: const Icon(Icons.save),
@@ -84,7 +84,7 @@ class _EditTeamNoticePageState extends State<EditTeamNoticePage> {
                         _formKey.currentState!.save();
 
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Saving notice...")),
+                          const SnackBar(content: Text('Saving notice...')),
                         );
 
                         try {
@@ -106,14 +106,14 @@ class _EditTeamNoticePageState extends State<EditTeamNoticePage> {
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text("Notice saved successfully!"),
+                              content: Text('Notice saved successfully!'),
                             ),
                           );
                           Navigator.of(context).pop(true);
                         } on Exception {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text("Failed to save notice.")),
+                                content: Text('Failed to save notice.')),
                           );
                         }
                       },
@@ -133,7 +133,7 @@ class _EditTeamNoticePageState extends State<EditTeamNoticePage> {
                             hintText: 'My Awesome Team Notice!',
                             labelText: 'Title',
                           ),
-                          onSaved: (value) => request.title = value ?? "",
+                          onSaved: (value) => request.title = value ?? '',
                           initialValue: request.title,
                           validator: validateNotEmpty,
                         ),
@@ -144,7 +144,7 @@ class _EditTeamNoticePageState extends State<EditTeamNoticePage> {
                                 'Hi everyone! This is a team notice on Noticebord.',
                             labelText: 'Body',
                           ),
-                          onSaved: (value) => request.body = value ?? "",
+                          onSaved: (value) => request.body = value ?? '',
                           initialValue: request.body,
                           maxLines: 10,
                           minLines: 1,

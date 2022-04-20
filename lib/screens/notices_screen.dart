@@ -81,7 +81,7 @@ class _NoticesScreenState extends State<NoticesScreen> {
                   child: LoadingButtonWidget(
                     loading: loading,
                     elevated: false,
-                    child: const Text("Load more"),
+                    child: const Text('Load more'),
                     onPressed: () async {
                       setState(() => loading = true);
 

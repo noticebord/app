@@ -4,9 +4,9 @@ import 'package:app/client/noticebord_client.dart';
 import 'package:flutter/foundation.dart';
 
 class ApplicationModel with ChangeNotifier {
-  final url = "https://noticebord.herokuapp.com";
+  final url = 'https://noticebord.herokuapp.com';
 
-  NoticebordClient get client => NoticebordClient(token: token, baseUrl: "$url/api");
+  NoticebordClient get client => NoticebordClient(token: token, baseUrl: '$url/api');
 
   int page = 0;
   String? token;

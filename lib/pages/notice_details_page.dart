@@ -59,7 +59,7 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
                 onPressed: () async {
                   shouldDelete = true;
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Deleting notice...")),
+                    const SnackBar(content: Text('Deleting notice...')),
                   );
                   Navigator.of(context).pop();
                 },
@@ -78,12 +78,12 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
           await app.client.notices.deleteNotice(notice.id);
           app.removeNotice(notice.id);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Your notice was deleted.")),
+            const SnackBar(content: Text('Your notice was deleted.')),
           );
           Navigator.pop(context);
         } on Exception {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Your notice could not be deleted.")),
+            const SnackBar(content: Text('Your notice could not be deleted.')),
           );
         }
       }
@@ -95,7 +95,7 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
         final done = snapshot.connectionState == ConnectionState.done;
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Notice Details"),
+            title: const Text('Notice Details'),
             actions: [
               IconButton(
                 icon: const Icon(Icons.edit),
@@ -103,12 +103,16 @@ class _NoticeDetailsPageState extends State<NoticeDetailsPage> {
                         notice.author != null &&
                         notice.author!.id == app.user
                     ? () async {
-                        final route = MaterialPageRoute<bool>(builder: (context) {
+                        final route =
+                            MaterialPageRoute<bool>(builder: (context) {
                           return EditNoticePage(noticeId: notice.id);
                         });
-                        final dirty = await Navigator.push<bool>(context, route);
+                        final dirty =
+                            await Navigator.push<bool>(context, route);
                         if (dirty != null && dirty) {
-                          setState(() => futureNotice = setNotice());
+                          setState(() {
+                            futureNotice = setNotice();
+                          });
                         }
                       }
                     : null,

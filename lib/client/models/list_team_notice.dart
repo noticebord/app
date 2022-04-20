@@ -1,4 +1,4 @@
-import 'package:app/client/models/user.dart';
+import 'package:app/client/models/models.dart';
 
 class ListTeamNotice {
   int id;

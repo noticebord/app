@@ -24,7 +24,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
         (index) {
           final topic = widget.topics[index];
           return ActionChip(
-            label: Text("#${topic.name}"),
+            label: Text('#${topic.name}'),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(

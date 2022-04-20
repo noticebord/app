@@ -3,12 +3,12 @@ abstract class Service {
   String baseUrl;
 
   static Map<String, String> defaultHeaders = {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-    "User-Agent": "app",
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    'User-Agent': 'app',
   };
 
   Service(this.token, this.baseUrl) {
-    defaultHeaders["Authorization"] = "Bearer $token";
+    defaultHeaders['Authorization'] = 'Bearer $token';
   }
 }

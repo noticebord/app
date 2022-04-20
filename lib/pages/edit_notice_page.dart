@@ -77,7 +77,7 @@ class _EditNoticePageState extends State<EditNoticePage> {
         final done = snapshot.connectionState == ConnectionState.done;
         return Scaffold(
           appBar: AppBar(
-            title: const Text("Edit Notice"),
+            title: const Text('Edit Notice'),
             actions: [
               IconButton(
                 icon: const Icon(Icons.save),
@@ -91,7 +91,7 @@ class _EditNoticePageState extends State<EditNoticePage> {
                         _formKey.currentState!.save();
 
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Saving notice...")),
+                          const SnackBar(content: Text('Saving notice...')),
                         );
 
                         try {
@@ -115,14 +115,14 @@ class _EditNoticePageState extends State<EditNoticePage> {
                           }
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text("Notice saved successfully!"),
+                              content: Text('Notice saved successfully!'),
                             ),
                           );
                           Navigator.of(context).pop(true);
                         } on Exception {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text("Failed to save notice.")
+                              content: Text('Failed to save notice.')
                             ),
                           );
                         }
@@ -143,7 +143,7 @@ class _EditNoticePageState extends State<EditNoticePage> {
                             hintText: 'My Awesome Notice!',
                             labelText: 'Title',
                           ),
-                          onSaved: (value) => request.title = value ?? "",
+                          onSaved: (value) => request.title = value ?? '',
                           initialValue: request.title,
                           validator: validateNotEmpty,
                         ),
@@ -154,7 +154,7 @@ class _EditNoticePageState extends State<EditNoticePage> {
                                 'Hi everyone! This is a notice on Noticebord.',
                             labelText: 'Body',
                           ),
-                          onSaved: (value) => request.body = value ?? "",
+                          onSaved: (value) => request.body = value ?? '',
                           initialValue: request.body,
                           maxLines: 10,
                           minLines: 1,
@@ -183,8 +183,8 @@ class _EditNoticePageState extends State<EditNoticePage> {
                           },
                           configureSuggestion: (topic) {
                             return SuggestionConfiguration(
-                              title: Text("#${topic.name}"),
-                              subtitle: Text("${topic.count} notices"),
+                              title: Text('#${topic.name}'),
+                              subtitle: Text('${topic.count} notices'),
                               additionWidget: Chip(
                                 avatar: const Icon(
                                   Icons.add_circle,
@@ -202,7 +202,7 @@ class _EditNoticePageState extends State<EditNoticePage> {
                           },
                           configureChip: (topic) {
                             return ChipConfiguration(
-                              label: Text("#${topic.name}"),
+                              label: Text('#${topic.name}'),
                               backgroundColor: Theme.of(context).primaryColor,
                               labelStyle: const TextStyle(color: Colors.white),
                               deleteIconColor: Colors.white,

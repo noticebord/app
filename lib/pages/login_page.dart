@@ -34,14 +34,14 @@ class _LoginPageState extends State<LoginPage> {
 
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Email cannot be empty")),
+        const SnackBar(content: Text('Email cannot be empty')),
       );
       setState(() => loading = false);
       return;
     }
     if (password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Password cannot be empty")),
+        const SnackBar(content: Text('Password cannot be empty')),
       );
       setState(() => loading = false);
       return;
@@ -49,12 +49,12 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       // Try logging in.
-      const baseUrl = "https://noticebord.herokuapp.com/api";
+      const baseUrl = 'https://noticebord.herokuapp.com/api';
       final app = Provider.of<ApplicationModel>(context, listen: false);
       final request = AuthenticateRequest(
         email.trim(),
         password.trim(),
-        "Noticebord App on ${await DeviceHelpers.deviceName}",
+        'Noticebord App on ${await DeviceHelpers.deviceName}',
       );
 
       // Get token and use it to get logged in user
@@ -65,8 +65,8 @@ class _LoginPageState extends State<LoginPage> {
       // Done. Persist everything.
       app.setAuth(token, user.id);
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString("token", token);
-      await prefs.setInt("user", user.id);
+      await prefs.setString('token', token);
+      await prefs.setInt('user', user.id);
       setState(() => loading = false);
     } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const HomePage(title: "Noticebord"),
+        builder: (context) => const HomePage(title: 'Noticebord'),
       ),
     );
   }
@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Theme.of(context).primaryColor.withAlpha(30),
-                        labelText: "Email address",
+                        labelText: 'Email address',
                         hintText: 'user@mail.com',
                         prefixIcon: const Icon(Icons.person_pin),
                         border: OutlineInputBorder(
@@ -140,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Theme.of(context).primaryColor.withAlpha(30),
-                        labelText: "Password",
+                        labelText: 'Password',
                         hintText: '••••••••',
                         prefixIcon: const Icon(Icons.shield),
                         suffixIcon: IconButton(
@@ -169,18 +169,18 @@ class _LoginPageState extends State<LoginPage> {
                         context,
                         listen: false,
                       );
-                      final registerUrl = "${app.url}/forgot-password";
+                      final registerUrl = '${app.url}/forgot-password';
                       if (!await launch(registerUrl)) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text("Could not launch URL."),
+                            content: Text('Could not launch URL.'),
                           ),
                         );
                       }
                     },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(vertical: 16.0),
-                      child: Text("Forgot Password?"),
+                      child: Text('Forgot Password?'),
                     ),
                     style: buttonStyle,
                   ),
@@ -207,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const HomePage(title: "Noticebord"),
+                                    const HomePage(title: 'Noticebord'),
                               ),
                             );
                           },
@@ -235,11 +235,11 @@ class _LoginPageState extends State<LoginPage> {
                             context,
                             listen: false,
                           );
-                          final registerUrl = "${app.url}/register";
+                          final registerUrl = '${app.url}/register';
                           if (!await launch(registerUrl)) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text("Could not launch URL."),
+                                content: Text('Could not launch URL.'),
                               ),
                             );
                           }

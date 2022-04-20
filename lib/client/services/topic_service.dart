@@ -1,17 +1,13 @@
 import 'dart:convert';
 
-import 'package:app/client/models/list_notice.dart';
-import 'package:app/client/models/paginated_list.dart';
-import 'package:app/client/models/topic.dart';
+import 'package:app/client/services/services.dart';
 import 'package:http/http.dart' as http;
-
-import 'service.dart';
 
 class TopicService extends Service {
   TopicService(String? token, String baseUrl) : super(token, baseUrl);
 
   Future<List<Topic>> fetchTopics() async {
-    final response = await http.get(Uri.parse("$baseUrl/topics"),
+    final response = await http.get(Uri.parse('$baseUrl/topics'),
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
@@ -19,12 +15,12 @@ class TopicService extends Service {
       return parsed.map<Topic>(Topic.fromJSON).toList();
     } else {
       throw Exception(
-          "Failed to fetch topics - ${response.statusCode}: ${response.reasonPhrase}");
+          'Failed to fetch topics - ${response.statusCode}: ${response.reasonPhrase}');
     }
   }
 
   Future<Topic> fetchTopic(int topicId) async {
-    final response = await http.get(Uri.parse("$baseUrl/topics/$topicId"),
+    final response = await http.get(Uri.parse('$baseUrl/topics/$topicId'),
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
@@ -32,7 +28,7 @@ class TopicService extends Service {
       return Topic.fromJSON(parsed);
     } else {
       throw Exception(
-          "Failed to fetch topic - ${response.statusCode}: ${response.reasonPhrase}");
+          'Failed to fetch topic - ${response.statusCode}: ${response.reasonPhrase}');
     }
   }
 
@@ -41,7 +37,7 @@ class TopicService extends Service {
     String? cursor,
   }) async {
     final response = await http.get(
-        Uri.parse("$baseUrl/topics/$topicId/notices?cursor=$cursor"),
+        Uri.parse('$baseUrl/topics/$topicId/notices?cursor=$cursor'),
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
@@ -49,7 +45,7 @@ class TopicService extends Service {
       return PaginatedList<ListNotice>.fromJSON(parsed);
     } else {
       throw Exception(
-          "Failed to fetch notices - ${response.statusCode}: ${response.reasonPhrase}");
+          'Failed to fetch notices - ${response.statusCode}: ${response.reasonPhrase}');
     }
   }
 }

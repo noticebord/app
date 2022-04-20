@@ -4,5 +4,5 @@ class SaveTeamNoticeRequest {
 
   SaveTeamNoticeRequest(this.title, this.body);
 
-  Map toJson() => {"title": title, "body": body};
+  Map toJson() => {'title': title, 'body': body};
 }

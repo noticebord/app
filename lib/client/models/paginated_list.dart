@@ -1,5 +1,4 @@
-import 'package:app/client/models/list_notice.dart';
-import 'package:app/client/models/list_team_notice.dart';
+import 'package:app/client/models/models.dart';
 
 class PaginatedList<T> {
   List<T> data;
@@ -23,7 +22,7 @@ class PaginatedList<T> {
 
   factory PaginatedList.fromJSON(Map<String, dynamic> parsedJson) {
     return PaginatedList(
-      parsedJson["data"].map((i) => factories[T]!(i)).cast<T>().toList(),
+      parsedJson['data'].map((i) => factories[T]!(i)).cast<T>().toList(),
       parsedJson['path'],
       parsedJson['per_page'],
       parsedJson['next_page_url'],

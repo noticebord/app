@@ -51,7 +51,7 @@ class _TopicDetailsPageState extends State<TopicDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Topic Details")),
+      appBar: AppBar(title: const Text('Topic Details')),
       body: FutureBuilder(
         future: futureTopicDetails,
         builder: (context, snapshot) {
@@ -70,7 +70,7 @@ class _TopicDetailsPageState extends State<TopicDetailsPage> {
                 itemBuilder: (context, position) {
                   if (position == 0) {
                     return MaterialBanner(
-                      content: Text("#${topic.name} - ${topic.count} notices"),
+                      content: Text('#${topic.name} - ${topic.count} notices'),
                       actions: [
                         TextButton(
                           onPressed: () {},
@@ -78,7 +78,7 @@ class _TopicDetailsPageState extends State<TopicDetailsPage> {
                             children: const [
                               Icon(Icons.add),
                               SizedBox(width: 4.0),
-                              Text("Create New"),
+                              Text('Create New'),
                             ],
                           ),
                         )
@@ -110,7 +110,7 @@ class _TopicDetailsPageState extends State<TopicDetailsPage> {
                     child: LoadingButtonWidget(
                       loading: loading,
                       elevated: false,
-                      child: const Text("Load more"),
+                      child: const Text('Load more'),
                       onPressed: () async {
                         setState(() => loading = true);
 

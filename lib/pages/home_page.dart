@@ -54,8 +54,8 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     SwitchListTile.adaptive(
                       value: false,
-                      title: Text("Revoke token (Experimental)"),
-                      subtitle: Text("Also delete the current access token"),
+                      title: Text('Revoke token (Experimental)'),
+                      subtitle: Text('Also delete the current access token'),
                       onChanged: null,
                     )
                   ],
@@ -82,8 +82,8 @@ class _HomePageState extends State<HomePage> {
 
     if (shouldLogout) {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.remove("token");
-      await prefs.remove("user");
+      await prefs.remove('token');
+      await prefs.remove('user');
       app.removeAuth();
       app.setPage(1);
     }
@@ -102,12 +102,12 @@ class _HomePageState extends State<HomePage> {
               authenticated
                   ? IconButton(
                       icon: const Icon(Icons.logout),
-                      tooltip: "Log out",
+                      tooltip: 'Log out',
                       onPressed: _showConfirmLogoutDialog,
                     )
                   : IconButton(
                       icon: const Icon(Icons.login),
-                      tooltip: "Log in",
+                      tooltip: 'Log in',
                       onPressed: () {
                         Navigator.pushReplacement(
                           context,
@@ -139,24 +139,24 @@ class _HomePageState extends State<HomePage> {
               if (authenticated)
                 const BottomNavigationBarItem(
                   icon: Icon(Icons.group),
-                  label: "Team Notices",
+                  label: 'Team Notices',
                 ),
               const BottomNavigationBarItem(
                 icon: Icon(Icons.sticky_note_2),
-                label: "Notices",
+                label: 'Notices',
               ),
               const BottomNavigationBarItem(
                 icon: Icon(Icons.home),
-                label: "Home",
+                label: 'Home',
               ),
               const BottomNavigationBarItem(
                 icon: Icon(Icons.tag),
-                label: "Topics",
+                label: 'Topics',
               ),
               if (authenticated)
                 const BottomNavigationBarItem(
                   icon: Icon(Icons.account_circle),
-                  label: "Profile",
+                  label: 'Profile',
                 ),
             ],
           ),
@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
               return FloatingActionButton.extended(
                 onPressed: openContainer,
                 icon: const Icon(Icons.add),
-                label: const Text("Create"),
+                label: const Text('Create'),
               );
             },
           ),

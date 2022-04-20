@@ -32,7 +32,7 @@ class _NoticeAuthorWidgetState extends State<NoticeAuthorWidget> {
           padding: const EdgeInsets.only(left: 8.0),
           child: author == null
               ? Text(
-                  "Anonymous",
+                  'Anonymous',
                   style: titleLarge!.copyWith(fontStyle: FontStyle.italic),
                 )
               : Text(author.name, style: titleLarge),

@@ -52,16 +52,16 @@ class _TopicsScreenState extends State<TopicsScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 16.0),
                                 child: Text(
-                                  "#${topic.name}",
+                                  '#${topic.name}',
                                   textAlign: TextAlign.start,
                                   style: Theme.of(context).textTheme.titleLarge,
                                 ),
                               ),
                               RichText(
                                 text: TextSpan(
-                                  text: "${topic.count} ",
+                                  text: '${topic.count} ',
                                   style: Theme.of(context).textTheme.subtitle1,
-                                  children: const [TextSpan(text: "notices")],
+                                  children: const [TextSpan(text: 'notices')],
                                 ),
                               ),
                             ],

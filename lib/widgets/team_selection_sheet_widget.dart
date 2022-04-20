@@ -34,7 +34,7 @@ class _TeamSelectionSheetWidgetState extends State<TeamSelectionSheetWidget> {
               child: Row(
                 children: [
                   Text(
-                    "Select a Team",
+                    'Select a Team',
                     style: Theme.of(context).textTheme.headline5,
                   ),
                   const Spacer(),
@@ -58,7 +58,7 @@ class _TeamSelectionSheetWidgetState extends State<TeamSelectionSheetWidget> {
                   tileColor:
                       team.id == widget.currentTeam.id ? Colors.blue[50] : null,
                   subtitle: team.id == widget.currentTeam.id
-                      ? const Text("Currently selected")
+                      ? const Text('Currently selected')
                       : null,
                   title: Text(team.name),
                   onTap: () => widget.onSelected(team),

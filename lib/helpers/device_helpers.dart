@@ -14,20 +14,20 @@ class DeviceHelpers {
     if (Platform.isAndroid) {
       AndroidDeviceInfo info = await deviceInfo.androidInfo;
       if (info.brand?.isEmpty ?? true) {
-        return "ANDROID DEVICE";
+        return 'ANDROID DEVICE';
       }
 
       if(info.device?.isEmpty ?? true) {
         return info.brand!.toUpperCase();
       }
 
-      return "${info.brand} ${info.device}".toUpperCase();
+      return '${info.brand} ${info.device}'.toUpperCase();
     }
     if (Platform.isIOS) {
       IosDeviceInfo info = await deviceInfo.iosInfo;
 
       if(info.name?.isEmpty ?? true) {
-        return "IOS DEVICE";
+        return 'IOS DEVICE';
       }
       return info.name!.toUpperCase();
     }
@@ -44,6 +44,6 @@ class DeviceHelpers {
       return info.computerName.toUpperCase();
     }
 
-    return "Unknown Device";
+    return 'Unknown Device';
   }
 }

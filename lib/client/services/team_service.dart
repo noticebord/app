@@ -1,15 +1,13 @@
 import 'dart:convert';
 
-import 'package:app/client/models/team.dart';
+import 'package:app/client/services/services.dart';
 import 'package:http/http.dart' as http;
-
-import 'service.dart';
 
 class TeamService extends Service {
   TeamService(String? token, String baseUrl) : super(token, baseUrl);
 
   Future<List<Team>> fetchTeams() async {
-    final response = await http.get(Uri.parse("$baseUrl/teams"),
+    final response = await http.get(Uri.parse('$baseUrl/teams'),
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
@@ -17,12 +15,12 @@ class TeamService extends Service {
       return parsed.map<Team>(Team.fromJSON).toList();
     } else {
       throw Exception(
-          "Failed to fetch teams - ${response.statusCode}: ${response.reasonPhrase}");
+          'Failed to fetch teams - ${response.statusCode}: ${response.reasonPhrase}');
     }
   }
 
   Future<Team> fetchTeam(int teamId) async {
-    final response = await http.get(Uri.parse("$baseUrl/teams/$teamId"),
+    final response = await http.get(Uri.parse('$baseUrl/teams/$teamId'),
         headers: Service.defaultHeaders);
 
     if (response.statusCode == 200) {
@@ -30,7 +28,7 @@ class TeamService extends Service {
       return Team.fromJSON(parsed);
     } else {
       throw Exception(
-          "Failed to fetch team - ${response.statusCode}: ${response.reasonPhrase}");
+          'Failed to fetch team - ${response.statusCode}: ${response.reasonPhrase}');
     }
   }
 }

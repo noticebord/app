@@ -87,7 +87,7 @@ class NoticebordApp extends StatelessWidget {
                 }
               });
               return snapshot.hasData
-                  ? const HomePage(title: "Noticebord")
+                  ? const HomePage(title: 'Noticebord')
                   : const LoginPage();
             }),
       ),

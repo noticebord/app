@@ -1,14 +1,7 @@
-import 'package:app/client/requests/authenticate_request.dart';
-
-import 'services/notice_service.dart';
-import 'services/team_notice_service.dart';
-import 'services/team_service.dart';
-import 'services/token_service.dart';
-import 'services/topic_service.dart';
-import 'services/user_service.dart';
+import 'package:app/client/services/services.dart';
 
 class NoticebordClient {
-  static const String defaultBaseUrl = "https://noticebord.space/api";
+  static const String defaultBaseUrl = 'https://noticebord.space/api';
 
   String? token;
   String baseUrl;
