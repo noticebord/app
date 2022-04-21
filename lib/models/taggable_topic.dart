@@ -1,4 +1,4 @@
-import 'package:flutter_tagging/flutter_tagging.dart';
+import 'package:flutter_tagging_plus/flutter_tagging_plus.dart';
 
 class TaggableTopic extends Taggable {
   final String name;

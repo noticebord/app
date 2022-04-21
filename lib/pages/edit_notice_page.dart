@@ -6,7 +6,7 @@ import 'package:app/client/requests/save_notice_request.dart';
 import 'package:app/models/taggable_topic.dart';
 import 'package:app/widgets/loader_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tagging/flutter_tagging.dart';
+import 'package:flutter_tagging_plus/flutter_tagging_plus.dart';
 import 'package:provider/provider.dart';
 
 class EditNoticePage extends StatefulWidget {
