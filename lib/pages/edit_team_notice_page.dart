@@ -43,7 +43,7 @@ class _EditTeamNoticePageState extends State<EditTeamNoticePage> {
   Future loadContent() async {
     notice = await client.teamNotices
         .fetchTeamNotice(widget.teamId, widget.teamNoticeId);
-    request = SaveTeamNoticeRequest(notice.title, notice.body);
+    request = SaveTeamNoticeRequest(title: notice.title, body: notice.body);
   }
 
   String? validateNotEmpty(String? value) {
@@ -92,17 +92,17 @@ class _EditTeamNoticePageState extends State<EditTeamNoticePage> {
                               .updateTeamNotice(
                                   widget.teamId, notice.id, request);
 
-                            // TODO: Should TeamNotice extend ListTeamNotice?
-                            app.updateTeamNotice(
-                              notice.id,
-                              ListTeamNotice(
-                                newNotice.id,
-                                newNotice.title,
-                                newNotice.createdAt,
-                                newNotice.updatedAt,
-                                newNotice.author,
-                              ),
-                            );
+                          // TODO: Should TeamNotice extend ListTeamNotice?
+                          app.updateTeamNotice(
+                            notice.id,
+                            ListTeamNotice(
+                              newNotice.id,
+                              newNotice.title,
+                              newNotice.createdAt,
+                              newNotice.updatedAt,
+                              newNotice.author,
+                            ),
+                          );
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -113,7 +113,8 @@ class _EditTeamNoticePageState extends State<EditTeamNoticePage> {
                         } on Exception {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text('Failed to save notice.')),
+                              content: Text('Failed to save notice.'),
+                            ),
                           );
                         }
                       },
