@@ -6,13 +6,13 @@ import 'package:http/http.dart' as http;
 class NoticeService extends Service {
   NoticeService(String? token, String baseUrl) : super(token, baseUrl);
 
-  Future<Notice> createNotice(SaveNoticeRequest request) async {
+  Future<ListNotice> createNotice(SaveNoticeRequest request) async {
     final response = await http.post(Uri.parse('$baseUrl/notices'),
         headers: Service.defaultHeaders, body: jsonEncode(request));
 
-    if (response.statusCode == 200) {
-      final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
-      return Notice.fromJSON(parsed);
+    if (response.statusCode == 201) {
+      final parsed = jsonDecode(response.body);
+      return ListNotice.fromJSON(parsed);
     } else {
       throw Exception(
           'Failed to create notice - ${response.statusCode}: ${response.reasonPhrase}');

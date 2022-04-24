@@ -5,13 +5,13 @@ class SaveNoticeRequest {
   bool anonymous;
   bool public;
 
-  SaveNoticeRequest(
-    this.title,
-    this.body,
-    this.topics,
-    this.anonymous,
-    this.public,
-  );
+  SaveNoticeRequest({
+    this.title = '',
+    this.body = '',
+    this.topics = const [],
+    this.anonymous = false,
+    this.public = false,
+  });
 
   Map toJson() => {
         'title': title,

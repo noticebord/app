@@ -49,8 +49,13 @@ class _EditNoticePageState extends State<EditNoticePage> {
         .where((t) => nestedTopics.contains(t.name))
         .map((t) => TaggableTopic(t.name, t.count))
         .toList();
-    request =
-        SaveNoticeRequest(notice.title, notice.body, nestedTopics, false, true);
+    request = SaveNoticeRequest(
+      title: notice.title,
+      body: notice.body,
+      topics: nestedTopics,
+      anonymous: false,
+      public: true,
+    );
   }
 
   String? validateNotEmpty(String? value) {
@@ -122,8 +127,7 @@ class _EditNoticePageState extends State<EditNoticePage> {
                         } on Exception {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text('Failed to save notice.')
-                            ),
+                                content: Text('Failed to save notice.')),
                           );
                         }
                       },
