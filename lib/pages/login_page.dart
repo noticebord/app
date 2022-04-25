@@ -133,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
                     TextFormField(
                       controller: passwordController,
                       obscureText: !passwordVisible,
@@ -179,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     },
                     child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      padding: EdgeInsets.symmetric(vertical: 8),
                       child: Text('Forgot Password?'),
                     ),
                     style: buttonStyle,
@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                   ElevatedButton(
                     onPressed: loading ? null : tryLogin,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Text(loading ? 'Loading...' : 'Login'),
                     ),
                     style: buttonStyle,
@@ -212,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                             );
                           },
                     child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      padding: EdgeInsets.symmetric(vertical: 8),
                       child: Text('Skip for now'),
                     ),
                     style: buttonStyle.copyWith(

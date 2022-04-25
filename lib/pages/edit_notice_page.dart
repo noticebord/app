@@ -161,7 +161,7 @@ class _EditNoticePageState extends State<EditNoticePage> {
                           onSaved: (value) => request.body = value ?? '',
                           initialValue: request.body,
                           maxLines: 10,
-                          minLines: 1,
+                          minLines: 3,
                           validator: validateNotEmpty,
                         ),
                         const SizedBox(height: 16),

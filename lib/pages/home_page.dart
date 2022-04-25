@@ -49,18 +49,6 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: const <Widget>[
                 Text('Would you like to log out of your account?'),
-                ExpansionTile(
-                  title: Text('Advanced'),
-                  subtitle: Text('View advanced options.'),
-                  children: <Widget>[
-                    SwitchListTile.adaptive(
-                      value: false,
-                      title: Text('Revoke token (Experimental)'),
-                      subtitle: Text('Also delete the current access token'),
-                      onChanged: null,
-                    )
-                  ],
-                ),
               ],
             ),
           ),
@@ -182,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 ),
-                SpeedDialChild(
+                if (authenticated) SpeedDialChild(
                   label: 'New team notice',
                   child: const Icon(Icons.group),
                   onTap: () {
